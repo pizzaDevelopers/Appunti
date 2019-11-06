@@ -1,0 +1,74 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{listings}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{\bfseries 17 ottobre 2019 }
+\lhead{\bfseries Linguaggi}
+
+\begin{document}
+
+\subsection*{Equivalenza}
+
+Due programmi sono detti equivalenti se hanno la stessa semantica, quindi se calcolano la stessa funzione.
+
+L'equivalenza è usata per:
+\begin{itemize}
+\item[-] Analizzare la correttezza, ovvero per dimostrare che il programma scritto calcola esattamente quella funzione;
+\item[-] Verificare l'efficienza dei due programmi, confrontandoli l'uni con l'altro.
+\end{itemize}
+
+\subsection*{Categorie sintattiche (sintassi pt. 2)}
+Le categorie sintattiche (ovvero i non terminali della grammatica) consistono nella classificazione dei costrutti in funzione del loro significato atteso, ovvero della classe di effetti che la loro esecuzione causa.
+
+\paragraph*{Stato} Con il termine stato si intende l'insieme di ambiente e memoria, dove:
+\begin{itemize}
+\item[-] L'\textbf{ambiente} specifica quali nome sono usati per indicare quali oggetti. Si tratta quindi dell'insieme dei legami tra identificazioni e locazioni di memoria. Poichè è possibile che lo stesso nome identifichi più oggetti differenti (ad esempio in scope differenti), non è detto che i legami durino per tutta la vita del programma. Le modifiche all'ambiente sono reversibili, in quanto avvengono solo all'interno dello scope attuale dell'identificatore -> quando l'ambiente termina tutte le modifiche vengono annullate automaticamente;
+\item[-] La \textbf{memoria} rappresenta una mappa delle variazioni dei valori associati agli identificatori. Si tratta quindi dell'insieme dei legami tra locazioni di memoria e valori. 
+\end{itemize}
+
+\noindent \\Le categorie sintattiche necessarie ad un linguaggio di programmazione sono distinte in base a cosa denotano/producono/ottengono. In base a ciò, le categorie sintattiche dei linguaggi di programmazione sono:
+\begin{itemize}
+\item[-] \textbf{Espressioni}: sono utilizzate per manipolare valori; per restitutire un valore devono essere valutate. Non effettuano modifiche sullo stato.
+
+È possibile avere espressioni sintatticamente diverese che ritornano lo stesso valore in tutti gli stati, e con gli stessi eventuali side-effects (es: $!(a \&\& b)$ e $(!a) || (|b)$). In questo caso si parla di spressioni equivalenti;
+\item[-] \textbf{Dichiarazioni}: sono utilizzate per creare o modificare i legami tra identificatori e locazioni di memoria (operano sull'ambiente).
+
+Due dichiarazioni sono equivalenti se producono la stessa memoria in tutti gli stati (lo stesso vale per tutti i suoi side-effecs);
+\item[-] \textbf{Comandi}: sono utilizzati per esegire modifiche sullo stato. Realizzano operazioni irreversibili (definitive nell'esecuzione del programma). I comandi quindi rappresentano funzioni di trasformazione; devono essere eseguiti. 
+
+Due comandi sono equivalenti se per ogni stato in input producono lo stesso stato in output.
+\end{itemize}
+
+\section*{\underline{Semantica operazionale}}
+La descrizione della semantica è effettuata tramite  sistemi di transizione, che sono matematicamente precisi, concisi e permettono l'astrazione. Infatti specificano cosa viene calcolato per induzione sulla struttura sintattica del linguaggio.
+
+Questi sistemi consistono in un insieme di regole date in funzione della sintassi, che specificano cosa avviene  induttivamente sulla sintassi.\\
+
+\noindent \textbf{Definizione}: un sistema di transizione è una struttura $(\Gamma, \rightarrow)$ dove $\Gamma$ è un insieme di elementi chiamati configurazioni e la relazione binaria $\rightarrow \subseteq\Gamma x \Gamma$ è chiamata relazione di transizione. Se $T\subseteq \Gamma$ è un insieme di configurazioni terminali, allora il sistema è detto terminale.\\
+
+\noindent Poichè la relazione di transizione è una relazione, e non una funzione, è possibile avere comportamenti non deterministici. Quindi la semantica è non deterministica.
+
+
+
+
+
+
+
+
+\end{document}

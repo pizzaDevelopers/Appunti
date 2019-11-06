@@ -1,0 +1,146 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{listings}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{\bfseries 10 ottobre 2019 }
+\lhead{\bfseries Linguaggi}
+
+\begin{document}
+
+\section*{\underline{Descrizione dei linguaggi di programmazione}}
+La  descrizione  di  un  linguaggio  avviene  su  quattro  dimensioni:
+\begin{itemize}
+\item[-] \textbf{Sintassi}: riguarda l’insieme di regole che permettono di costruire frasi corrette (relazione tra segni -> tra tutte le possibile sequenze di parole sull'alfabeto dato, seleziona un sottoinsieme che costituisce le frasi del liguaggio stesso);
+\item[-] \textbf{Semantica}: riguarda l'attirbuzione di significato alle frasi (relazione tra segni e significato -> relazione tra frasi corrette e entità autonome che esistono indipendentemente dai segni che usiamo per descriverle). Si compone dell'insieme di tecniche che permettono di risalire da un pogramam alla funzione che il programmma stesso calcola;
+\item[-] \textbf{Pragmatica}: riguarda il modo in cui le frasi corrette sono usate (relazioni tra segni, significato e utente-> frasi con lo stesso significato possono essere usate in modo diverso da utenti diversi);
+\item[-] \textbf{Implementazione}: riguarda l'esecuzione di una frase corretta, rispettandone la semantica.
+\end{itemize}
+
+\subsection*{Sintassi}
+Le   regole   sintattiche   del   linguaggio   specificano   quali stringhe di caratteri sono legali nel linguaggio.
+
+\noindent L'analisi del linguaggio dei lessemi avviene tramite un automa a stati finiti chiamato \textbf{riconoscitore}. 
+Un riconoscitore  è uno strumento che legge in input stringhe sull’alfabeto del linguaggio e decide se la stringa appartiene o meno al linguaggio. Il linguaggio dei lessemi viene quindi riconosciuto.
+L'analisi tramite riconoscitore è possibile poichè, in genenrale, il linguaggio dei lessemi è un linguaggio di tipo \textbf{regolare}.\\
+
+\noindent  Il linguaggio dei token (dei programmi) è in generale   un   linguaggio \textbf{context-free}   (CF),   quindi generato da una grammatica CF. 
+É quindi possibile analizzarlo attraverso un \textbf{generatore}.
+Un generatore è uno strumento che genera stringhe di un linguaggio, attraverso il quale si può determinare se la sintassi di una particolare frase è sintatticamente corretta confrontandola con la struttura del generatore stesso (parser).\\
+
+\noindent Attenzione: in ogni caso, i  linguaggi regolari  possono  essere  generati  (grammatiche  regolari)  e i linguaggi CF possono essere riconosciuti (automi a pila).\\
+
+\noindent \underline{Esempio: descrizione del linguaggio delle stringhe palindorme}\\
+
+\noindent Supponiamo di avere l'alfabeto $\Sigma = \{a ,b\}$ ed il linguaggio $A = \{\sigma \in \Sigma^* | \sigma$ palindroma$\}$.
+Selezioniamo ora tutte le stringhe palindrome si $\Sigma$. La selezione può essere effettuata tramite una semplice definizione ricorsiva di stringa palindroma:
+
+\begin{itemize}
+\item[-]Caso base: $a$, $b$, $\varepsilon$ sono stringhe palindrome;
+\item[-]Passo induttivo: se $\sigma$ è una generica stringa palindroma, allora anche $a\sigma a$ e $b\sigma b$ sono palindorme.
+\end{itemize}
+
+\noindent In forma grammaticale, la definizione induttiva per le stringhe palindrome può essere scritta come segue:
+
+\begin{enumerate}
+\item $P \rightarrow \varepsilon$
+\item $P \rightarrow a$
+\item $P \rightarrow b$
+\item $P \rightarrow a \sigma a$
+\item $P \rightarrow b \sigma b$
+\end{enumerate}
+
+\noindent É possibile riassumere i punti sopra come: $P \rightarrow \varepsilon|a|b|a \sigma a|b \sigma b$.\\
+
+\begin{tcolorbox}[title=\textbf{Terminologia}]
+\begin{tabular}{lp{0.80\textwidth}}
+\textbf{Lessema} &   parola, ovvero una stringa di caratteri su un alfabeto, con significato specifico (unità minima sintattica). Esempi: $index$, $=$, $2$.\\
+\textbf{Token} & frase, ovvero una sequenza (ben formata) di parole. Esempio: $index = 2$.\\
+\textbf{Programma} & frase che appartiene alla categoria sintattica dei comandi.\\
+\textbf{Linguaggio} & insieme di frasi.\\
+\end{tabular}
+\end{tcolorbox}
+
+\subsubsection*{Grammatiche context - free (libere)}
+Le grammatiche CF sono una tecnica fondamentale per la descrizione della sintassi dei linguaggi di programmazione.\\
+
+\begin{tcolorbox}[title=\textbf{Definizione}]
+Una grammatica libera da contesto (CF) è una quadrupla G=<V, T, P, S> dove:
+\begin{enumerate}
+\item \textbf{V} è un insieme finito di variabili (dette anche simboli non terminali);
+\item \textbf{T} è un insieme finito di simboli terminali (V $\cap$ T $= \emptyset$);
+\item \textbf{P} è un insieme finito di produzioni (o regole). Ogni produzione è della forma $A \rightarrow \alpha$, dove:
+	\begin{itemize}
+	\item[-] $A \in V$ è una variabile;
+	\item[-] $\alpha \in (V \cup U)$.
+	\end{itemize}
+\item $S \in V$ è una variabile speciale detta simbolo iniziale.
+\end{enumerate}
+
+\noindent Dall'esempio precedente:
+\begin{itemize}
+\item[-] $a$ e $b$ sono simboli terminali;
+\item[-] $\sigma$ è una variabile;
+\item[-] $P$ è un simbolo iniziale;
+\item[-] Le righe 1-5 sono regole.
+\end{itemize}
+\end{tcolorbox}
+
+\noindent \\Nella grammatica i simboli terminali costituiscono le parole del   nostro   linguaggio,   ovvero   il   vocabolario,   mentre  i simboli non terminali   costituiscono le categorie sintattiche, e quindi i diversi tipi di elementi che possono essere usati  per  comporre  frasi.
+Le produzioni rappresentano l'insieme delle regole di composizione. Il linguaggio  è  l’insieme  di  tutte  le  possibili  frasi,  ovvero  le stringhe di simboli terminali (parole), generate a partire dal simbolo  iniziale  S,  che  rappresenta  la  categoria  delle  frasi legali nel linguaggio.\\
+
+\noindent Una grammatica è detta libera dal contesto quando ogni regola sintattica è espressa sotto forma di derivazione di un simbolo a sinistra a partire da uno o più simboli a destra.
+
+\subsubsection*{Notazione BNF}
+
+La BNF è un metalinguaggio utilizzato per descrivere i linguaggi di programmazione. 
+Il suo principale impiego si ha nella descrizione delle grammatiche CF, dove:
+\begin{itemize}
+\item[-] I simboli teminali sono raooresentati tramite parole;
+\item[-] I simboli non teminali sono racchiusi in $<>$;
+\item[-] Per le produzioni la $\rightarrow$ è sostituito con $::=$; 
+\end{itemize}
+
+\noindent La notazione BNF è semplice ma sufficentemente potente per rappresentare i linguaggi di programmazione: rappresenta   l’ordine   di apparenza   degli   operatori,   strutture   annidate   ad   ogni livello,   precedenza   e   associativa   di   operatori.  \\
+
+\noindent La notazione ENBF estende l'NBF permettendo di rappresentare opzioni:
+\begin{itemize}
+\item[-] $[ \hspace{0.1cm}]$ indica 0 o 1 occorrenza del contenuto;
+\item[-] $\{\}$ indica 0 o più occorrenze del contenuto;
+\item[-] La virgoma permette di esprimere più opzioni in or.
+\end{itemize}
+
+
+\subsection*{Analisi semantica}
+L'analisi semantica si divide in due parti:
+\begin{itemize}
+\item[-] Semanica statica, che determina i contesti in cui le stringhe sintatticamente corrette sono illegali (es: la stringa $I:=R+3$ è corretta, ma se il linguaggio prevede la dichiarazione del tipo di una variabile e $I$ non fossa stata dichiarata, sarebbe un errore);
+\item[-] Semantica dinamica, che si occupa di attribuire un significato \footnote{Per significato si intendono entità autonome che esistono indipendentemente dai segni che usiamo per descriverle -> es: la mano resta la mano, a prescindere da che termine uso per indicarla} ad ogni frase sintatticamente corretta.
+\end{itemize}
+
+L'analisi semantica è più complessa rispetto a quella sintattica, poichè ricerca:
+
+\begin{itemize}
+\item[-] Esattezza, ovvero una descrizione precisa e non ambigua di cosa ci si  debba  aspettare  da  ogni  costrutto  sintatticamente corretto,   affinchè l'utente sappia  a   priori   quello   che   succederà durante l’esecuzione;
+\item[-] Flessibilità, ovvero non deve anticipare  scelte  che  possono essere demandate all’implementazione.
+\end{itemize}
+
+\noindent Per  dare  semantica ad un linguaggio dobbiamo  sempre  dare significato   agli   elementi   complessi   in   funzione   del significato degli elementi più semplici che lo compongono e del modo con cui questi sono composti. 
+
+
+\end{document}
