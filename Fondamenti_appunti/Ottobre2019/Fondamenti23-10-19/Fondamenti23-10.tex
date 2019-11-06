@@ -1,0 +1,45 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\lhead{\bfseries Fondamenti dell'informatica}
+\rhead{\bfseries 23 ottobre 2019}
+
+\begin{document}
+
+\subsection*{Riconoscere che un linguaggio non è regolare}
+
+\paragraph*{Pumping Lemma} Sia $\mathfrak{L} \in \Sigma^*$ un linguaggio regolare. Allora esiste un $n\in N$ tale che per ogni $z\in \mathfrak{L}$, con $|z|\geq n$ esistono $u,v,w\in\Sigma^*$, dove:
+	\begin{enumerate}
+		\item $z = uvw$;
+		\item $|uv|\leq n$;
+		\item $|v|>0$;
+		\item $(\forall i\in\mathbb{N}) (uv^iw\in L)$.
+	\end{enumerate}
+
+\begin{tcolorbox}
+Sia $M=\langle\{q_0,\dotsc,q_{n-1}\},\Sigma,\delta,q_0,F\rangle$ un ASFD con $n$ stati tale che $L=L(M)$. Sia $z=a_1,\dotsc,a_m.m\geq n, z\in L$. Per $i=1,\dots,n$ si consideri $\hat\delta(q_0, a_1\dotsc a_i)$. Vengono attraversati quindi $n+1$ stati. Avendo per costruzione il nostro automa n stati esiste almeno uno stato $\bar q$ raggiunto almeno 2 volte. 
+	
+	Avremmo quindi $\hat\delta(q_0, a_1\dots a_{i_1}) = \bar q = \hat\delta(q_0, a_1\dots a_{i_1} \dots a_{i_2})$. Dunque prendiamo $u=a_1\dots a_{i_1}$, $v=a_{i_1+1}\dots a_{i_2}$, $w=a_{i_2+1}\dots a_m$. Dunque $\hat\delta(q_0, u) = \bar q = \hat\delta(q_0, uv) = \hat\delta(\bar q, v)$. Dato che $\hat\delta(q_0, uvw) = q'$ per qualche $q'\in F$ e $\hat\delta(q_0, uv) = \bar q$, allora $\hat\delta(\bar q, w) = q'$.
+	
+	Per induzione si mostra che $\hat\delta(q_0,uv^i)=\bar q$ e quindi $\hat\delta(q_0, uv^iw) = q'\in F$. 
+
+\end{tcolorbox}
+
+\end{document}

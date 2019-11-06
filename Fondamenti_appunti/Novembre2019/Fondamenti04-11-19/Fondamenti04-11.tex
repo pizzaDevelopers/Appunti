@@ -1,0 +1,84 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{longtable}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\lhead{\bfseries Fondamenti dell'informatica}
+\rhead{\bfseries 04 novembre 2019}
+
+\begin{document}
+
+\paragraph*{Forma normale di Chomsky} Ogni linguaggio context free senza $\varepsilon - produzioni$ ($A \rightarrow \varepsilon$) è generato da una grammatica dove tutte le produzioni sono della forma 
+\begin{align*}
+A &\rightarrow BC\\
+A &\rightarrow a
+\end{align*}
+
+\begin{tcolorbox}[title=\textbf{dimostrazione}]
+Costruiamo un algoritmo in grado di generare questa nuova grammatica. Prendiamo una grammatica $G=\langle V,T,P,S\rangle$ senza $\varepsilon$-produzioni, simboli inutili e produzioni unitarie, ed eseguiamo il seguente algoritmo: \\\\
+	\textbf{while} new $P\neq$ old $P$ \\
+	\textbf{do} $\forall A\rightarrow X_1 \dots X_m \in P$ \textbf{case}:
+	\begin{itemize}
+		\item $m=1$ \textbf{and} $X_1\in T$ (perché non ci sono produzioni unitarie): \textbf{continue}
+		\item $m=1$ \textbf{and} $X_1\in V$: \textbf{impossibile}
+		
+		\item $m\geq 2\land X_i\in T$: $V=V\cup{B_i}$, $P=(P\setminus\{A\rightarrow X_1\dots X_m\})\cup\{A\rightarrow Y_1 \ldots Y_m,B_i\rightarrow X_i\}$ dove $Y_i = X_i$ se $X_i \in V$ altrimenti $Y_i = B_i$ se $X_i\in T$
+		\item $m\geq 2\land X_i\in V$: $P=(P\setminus\{A\rightarrow X_1\dots X_m\})\cup{B\rightarrow X_1 X_2, A\rightarrow B X_3\dots X_m}$
+	\end{itemize}
+	\textbf{end while}
+\end{tcolorbox}
+
+\subsection*{Pumping lemma per grammatiche context free}
+Sia $L$ un linguaggio context-free. Allora $\exists n\in\mathbb{N}$ dove $\forall z\in \mathfrak{L}$ con $|z|\geq n$ esistono 
+	$u,v,w,x,y\in T^*$ tali che:
+	\begin{itemize}
+		\item $z=uvwxy$
+		\item $|vx|\geq 1$
+		\item $|vwx|\leq n$
+		\item $\forall i\in\mathbb{N}. uv^iwx^iy\in L$
+	\end{itemize}
+
+\begin{tcolorbox}[title=\textbf{dimostrazione}]
+Sia $G = <V, T, P, S>$ una grammatica in forma normale di Chomsky che genera $L\setminus\varepsilon$. Possiamo assumere questo senza perdita di generalità in quanto è sempre possibile costruire una grammatica $G'$ con un simbolo $S'\rightarrow S|\varepsilon$.
+	
+	Per induzione su $i\geq 1$ si dimostra che se un albero di derivazione per una stringa $z\in T^\star$ ha tutti i cammini di lunghezza minore o uguale ad $i$ allora $|z|\leq 2^{i-1}$
+	
+	Sia $|V|=k$ ($k>0$) e sia $n=2^k$. Se $z\in L$ e $|z|\geq n$ allora ogni albero di derivazione per $z$ deve avere un cammino lungo almeno $k+1$. Pertanto, all'interno di questo cammino deve esistere un simbolo non terminale $A\in V$ che si ripete due volte. Siano allora $v_1$ e $v_2$ due vertici tali che:
+	\begin{itemize}
+		\item entrambi corrispondono allo stesso simbolo non terminale $A$
+		\item $v_1$ è più vicino alla radice di $v_2$
+		\item poiché $n\geq 2$ a $v_1$ è associata una produzione del tipo $A\rightarrow BC$
+		\item da $v_1$ alla foglia la lunghezza è al più $k+1$
+	\end{itemize}
+	
+	Sia $z_1$ la stringa lunga al più $2^k$ generata dal sottoalbero $T_1$ con radice in $v_1$. Sia $w$ la stringa generata dal sottoalbero $T_2$ con radice in $v_2$. Possiamo scrivere $z_1=vwx$. Notiamo che almeno una delle due stringa $z$ o $x$ deve essere non vuota in quanto a $v_1$ è associata una produzione del tipo $A\rightarrow BC$ e $T_2$ corrisponde quindi a $B$ o $C$. 
+\end{tcolorbox}
+
+\begin{tcolorbox}
+Allora abbiamo che:
+	\[
+		A\rightarrow^* vAx\text{ e }A\rightarrow^* w
+	\]
+	con $|vwx|\leq 2^k = n$. Quindi possiamo applicare $i$ volte la prima regola e otteniamo:
+	\[
+		A\rightarrow^* v^iwx^i
+	\]
+	per ogni $i\geq 0$. Ponendo $u$ e $y$ pari alle stringhe tali che $z=uvwxy$ abbiamo dimostrato il pumping lemma. 
+\end{tcolorbox}
+\end{document}

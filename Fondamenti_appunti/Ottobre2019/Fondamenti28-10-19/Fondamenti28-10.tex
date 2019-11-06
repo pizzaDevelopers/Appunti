@@ -1,0 +1,116 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{longtable}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\lhead{\bfseries Fondamenti dell'informatica}
+\rhead{\bfseries 28 ottobre 2019}
+
+\begin{document}
+
+\section*{\underline{Grammatiche libere dal contesto}}
+Una grammatica può essere intesa come un insieme di regole che permettono di generare un linguaggio. Le grammatiche libere dal contesto permettono di descrivere la sintassi dei linguaggi di programmazione.\\
+
+\noindent Una \textbf{grammatica} può essere definita come una quadrupla $<V, T, P, S>$ (per la spiegazione vedere linguaggi).\\
+
+\noindent Una \textbf{produzione di un linguaggio context free} è del tipo:
+\begin{align*}
+A \rightarrow \alpha
+\end{align*}
+\noindent ovvero in ogni stringa posso sostituire $A$ con $\alpha$ indipendentemente da ciò che ho a destra e a sinistra\footnote{Da questo deriva il nome "libere dal contesto"}.\\
+
+\noindent Esempio:
+
+\begin{align*}
+\gamma A \delta A w \rightarrow^1 \gamma \alpha \delta A \rightarrow^2 \gamma \alpha \delta \alpha w
+\end{align*}
+
+\subsection*{Linguaggio libero dal contesto}
+Un linguaggio generato da una grammatica $G$ si definisce come segue:
+\begin{align*}
+L(G) = \{x \in T^* | S \rightarrow^* x\}
+\end{align*}
+\noindent ovvero consiste di tutte quelle stringhe che, a partire dal simbolo iniziale e dopo un numero finito di riduzioni ($\rightarrow^*$), arrivano ad $x$.\\
+
+\noindent Un linguaggio si dice libero dal contesto se è generato da una grammatica libera dal contesto. Un linguaggio può essere generato da infinite grammatiche.
+
+\paragraph*{Definizione} Una grammatica si dice ambigua se esiste una stringa per la quale esistono due alberi di derivazione diversi.\\
+
+\noindent \underline{Esempio: dimostrare che il linguaggio è context free}
+\begin{align*}
+\mathfrak{L} = \{ a^n b^n | n \ge 0\}
+\end{align*}
+
+\noindent Per dimostrare che il linguaggio è CE devo costruire la grammatica CE che lo genera.
+\begin{align*}
+T =& \{ a, b \}\\
+V =& \{ S\}\\
+S =& iniziale
+\end{align*}
+
+\noindent Ora devo costruire le produzioni:
+\begin{itemize}
+\item[-] Poichè posso avere anche $n = 0$, il linguaggio contiene la string avuote ($\varepsilon = a^0b^0$);
+\item[-] Se $ a^nb^n$ ($S \rightarrow a^nb^n$) è una stringa del linguaggio, allora anche $aSb$ appartiene al linguaggio ($== aa^nb^nb$).
+\end{itemize}
+
+\noindent Quindi, schematizzando:
+\begin{align*}
+P =
+\begin{cases} 
+S \rightarrow \varepsilon \\ 
+S \rightarrow aSb
+\end{cases} 
+\hspace{1cm} oppure \hspace{1cm} P = \varepsilon | aSb
+\end{align*}
+
+\noindent Ora devo dimostrare che il linguaggio generato dalla grammatica che ho costruito è uguale a quello di partenza ($\mathfrak{L}(G) = \mathfrak{L}$):\\
+
+\noindent \textbf{Dimostrazione $\mathfrak{L}(G) \leftarrow \mathfrak{L}$}
+
+\begin{longtable}{p{.40\textwidth} p{.40\textwidth}}
+Caso $n = 0 \rightarrow \varepsilon \in \mathfrak{L}$ & $S \rightarrow^1 \varepsilon \in \mathfrak{L}(G)$
+\\\\
+Caso $n > 0 \rightarrow a^nb^n \in \mathfrak{L}$ e $a^nb^n \in \mathfrak{L}(G)$ suppongo $S \rightarrow^* a^nb^n$ & $S \rightarrow aSb \rightarrow^* aa^nb^nb = a^{n+1}b^{n+1}$
+\end{longtable}
+
+\noindent \textbf{Dimostrazione $\mathfrak{L}(G) \rightarrow \mathfrak{L}$}
+\begin{longtable}{p{.40\textwidth} p{.40\textwidth}}
+Caso $n = 1 $ & $ \varepsilon \in \mathfrak{L}$
+\\\\
+Caso $n > 1 $ suppongo $ (S \rightarrow^n a^kb^k)$ & $\underline{S \rightarrow aSb \rightarrow^n}_{n+1} \hspace{0.2cm} aa^kb^kb$
+\end{longtable}
+
+\noindent \underline{Esempio: costruire la grammatica}
+\begin{align*}
+\mathfrak{L} = \{a^mb^{n+2}c^na^{m+2} | m, n \ge 0\}
+\end{align*}
+
+\noindent Scompongo la stringa principale in due sottostringhe $b^{n+2}c^n$ e $a^ma^{m+2}$:\\
+
+$S \rightarrow aAaaa | Aaa$ (caso stringa vuota)
+
+$A \rightarrow bbbAc | bb$ (caso stringa vuota)\\
+
+\noindent Questa soluzione presenta però un errore: ?. Quindi Riscrivo la stringa principale come $a^m[bb(b^nc^n)aa]a^n$:\\
+
+$S \rightarrow aSa | bbBaa$
+
+$B \rightarrow \varepsilon | bBc$ ($B == b^nc^n$)
+\end{document}
