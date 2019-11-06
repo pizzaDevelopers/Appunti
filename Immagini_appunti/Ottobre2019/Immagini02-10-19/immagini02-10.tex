@@ -1,0 +1,91 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{listings}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{\bfseries 09 ottobre 2019 }
+\lhead{\bfseries Segnali e immagini}
+
+\begin{document}
+
+\section*{\underline{Introduzione}}
+\begin{tabular}{lp{0.60\textwidth}}
+\textbf{Segnale} & una qualsiasi grandezza (fisica o astratta) che varia in un dominio (spesso il tempo, ma anche lo spazio, altro) in maniera deterministica o aleatoria, che trasporta più o meno informazione.
+
+Esempi di segnali: segnale acustico, segnale elettronico, segnale elettromagnetico, segnale sismico, segnale su grandezze astratte (serie finanziarie, ...), immagine (segnale su due dimensioni con dirata infinita). \\\\
+
+\textbf{Informazione} & qualcosa che quando viene fornita dissipa un’incertezza.\\\\
+
+\textbf{Rumore} & tutto ciò che è associato al segnale, ma non porta informazione. Disturba la ricezionedel segnale e l’estrazione dell’informazione.\\\\
+
+\textbf{Energia di un segnale} & attributo associato ad un segnale (segnale di energia), espresso in joule (potenza x tempo) -> per trasmettere un segnale serve energia.\\\\
+
+\textbf{Potenza} & energia per unità di tempo, utile per trattare i segnali ad energia infinita.\\\\
+
+\textbf{Signal-to-Noise Ratio (SNR)} & rapporto tra la potenza del segnale e la potenza del rumore. Più grande (di 1) è, meglio si interagisce con il segnale.\\\\
+
+\textbf{Sistema di elaborazione dei segnali} & può essere visto come un modello matematico che, ad un segnale d’ingresso, reagisce producendo un segnale di uscita. Può essere mono o multi variabile.
+
+Un sistema agisce su un segnale mogliorando il rapporto segnale - rumeore o estraendo informazioni dal segnale.\\\\
+
+\textbf{Analisi in frequenza} & un segnale può essere visto, oltre che attraverso il suo sviluppo spaziale/temporale, attraverso il suo sviluppo in frequenza. Questo tipo di analisi permette di "contare" quante volte un certo evento si ripete per unità di tempo.
+
+Più la frequenza è alta, più l'evento si ripete.\\\\
+
+\textbf{Filtraggio} & consiste nella trasformazione di un segnale da una forma ad un'altra.\\\\
+
+\textbf{Acquisizione di un segnale} & nel caso in cui il segnale sia un'entità esistente fisicamente, è fondamentale  essere in grado di acquisirlo. Più alta la frequenza, più costoso è l’hardware  e più difficili sono le condizioni per l'acquisizione. 
+
+I principali strumenti impiegnati sono:
+\begin{itemize}
+\item[-] Sensore/trasduttore: dispositivo che acquisisce in ingresso una grandezza fisica ed esprime in uscita una grandezza elettrica il cui valore è funzione della grandezza di ingresso;
+\item[-] Campionatore: trasforma un segnale da continuo a discreto;
+\item[-] Digitalizzatore: discretizza/quantizza i valori assunti da un segnale.
+\end{itemize}
+
+\\\\ \textbf{Campionamento} & i segnali acquisiti dall’ambiente naturale ed alcuni trasmessi dall’uomo sono analogici (continui nello spazio/tempo e nei valori che essi trasportano -> il grafico del segnale è continuo). Il campionamento trasforma un segnale da continuo a discreto.
+
+Se il campionamento è corretto preserva totalmente l'informazione.\\\\
+
+\end{tabular}
+
+\begin{tabular}{lp{0.75\textwidth}}
+
+\textbf{Quantizzazione} & associa i valori continui di un segnale (continuo o campionato) ad un intervallo di quantizzazione, scelto tra diversi intervalli.
+ Contrariamente alla campionatura (che permette di mantenere invariate le informazioni associate ad un segnale), fa perdere sempre un po’ di informazione (non più recuperabile), a causa dell’errore di quantizzazione (che si può verificare a tutte le frequenze).\\\\
+
+\textbf{Digitalizzazione} & se un segnale viene campionato e quantizzato, allora diventa un segnale digitale.
+
+La digitalizzazione di un segnale è essenziale per la trasmissione dello stesso.\\\\
+
+\textbf{Filtraggio} & Il filtraggio rappresenta una famiglia di operazioni per eseguire:
+\begin{itemize}
+\item[-] Enhancement (miglioramento, rinforzo): migliora alcuni aspetti per aumentare l’informazione del segnale;
+\item[-] Restauro: ripristina un segnale corrotto da vari tipi di rumore allo stato originale;
+\item[-] Separazione: un segnale può essere visto come composizione di più segnali, e quindi scomponibile in più parti;
+\item[-] Estrazione delle caratteristiche: isola le caratteristiche di un segnale. Serve principalmente per la classificazione segnale tramite machine learning.
+\end{itemize}
+
+\\\\ \textbf{Sintesi di un segnale} & consiste nella riproduzione al computer di un segnale presente in natura.
+
+\end{tabular}
+
+
+\end{document}
+
+

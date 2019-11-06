@@ -1,0 +1,127 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{multicol}
+\usepackage{xcolor}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{\bfseries 31 ottobre 2019 }
+\lhead{\bfseries Segnali e immagini - laboratorio}
+
+\newcounter{main}
+\setcounter{main}{1}
+
+\lstnewenvironment{code}[1][firstnumber=\themain,name=main]
+  {\lstset{language=matlab,
+           basicstyle=\medium\ttfamily,
+           numbers=left,
+           basicstyle=\small,
+           columns=fullflexible,
+           inputencoding=latin1,
+           #1
+          }
+}
+{\setcounter{main}{\value{lstnumber}}}
+
+
+\begin{document}
+
+\noindent \textbf{Esempio di ricerca difetti su tessuto:}
+
+\begin{code}
+%% Cross-correlazione 2D normalizzata per trovare difetti su tessuti
+
+%Creo le sottosezioni per i controlli
+A = rgb2gray(imread('tex.jpg'));
+[R,C]=size(A);
+pattern1 = A(1:14,1:14);
+pattern2 = A(2:15,2:15);
+pattern3 = A(R-13:R,C-13:C);
+pattern4 = A(R-14:R-1,C-14:C-1);
+pattern5 = A(1:14,C-13:C);
+pattern6 = A(2:15,C-13:C);
+
+%bordo le sottosezioni sull'immagine principale (rappresentazione esclusivamente visiva)
+figure;
+imagesc(A); axis image; colormap gray; hold on;
+rectangle('position',[1,1,14,14],'EdgeColor',[1 0 0]);%edgecolor colora i bordi del rettangolo con il colore indicato
+rectangle('position',[2,2,15,15],'EdgeColor',[1 0 0]);
+rectangle('position',[R-13,C-13,14,14],'EdgeColor',[1 0 0]);
+rectangle('position',[R-14,C-14,14,14],'EdgeColor',[1 0 0]);
+rectangle('position',[1,C-13,14,14],'EdgeColor',[1 0 0]);
+rectangle('position',[2,C-13,14,14],'EdgeColor',[1 0 0]);
+
+%ottengo una media della cross correlazione tra l'immagine e tutti i pattern
+c1 = normxcorr2(pattern1,A);
+c2 = normxcorr2(pattern2,A);
+c3 = normxcorr2(pattern3,A);
+c4 = normxcorr2(pattern4,A);
+c5 = normxcorr2(pattern5,A);
+c6 = normxcorr2(pattern6,A);
+
+c = (c1+c2+c3+c4+c5+c6)/6;
+c = c(12:end-12,12:end-12);
+figure, surf(abs(c)), shading flat
+figure, imagesc(abs(c)), colorbar
+c=abs(c);
+
+mask = c<0.2; %setto la soglia per il controllo se c'è difetto o no
+figure, imagesc(mask)
+se = strel('disk',3);
+mask2 = imopen(mask,se);
+figure, imagesc(mask2);
+
+%operazioni di filtraggio morfologico (pulisco la maschera)
+A=A(5:end-6,5:end-6);
+A1 = A;
+A1(mask2)=255;
+Af=cat(3,A1,A,A);
+ figure;
+imshowpair(A,Af,'montage')
+\end{code}
+
+\noindent \\Analisi codice:
+\begin{longtable}{| p{.25\textwidth} | p{.70\textwidth} |}
+
+\textbf{M = size(X,DIM)} & Ritorna la lunghezza della dimensione di X specificata dallo scalare DIM.
+
+Nel caso di un video, le quattro dimensioni sono (righe, colonne, canali colore, n. frame).
+\\\\
+\textbf{B = imresize(A, SCALE)} & Ritorna l'immagine A riscalata in base a SCALA.
+Se SCALE = 1 ritorna l'immagine originale; se SCALE = 0.5 ritorna limmagine ridotto della metà (== prende un pixel ogni due).
+\\\\
+\textbf{I2 = imcrop(I)} & Assegna ad I2 una sezione dell'immagine I. La sezione viene selezionata tramite mouse.
+\\\\
+\textbf{J = rgb2gray(I)} & Converte l'immagine da RGB a scala di grigi.
+\\\\
+\textbf{[I,J] = ind2sub(SIZE,INDEX)} & Converte INDEX in una coppia di indici (I, J) basandosi su una matrice di dimensione SIZE. 
+
+\end{longtable}
+
+\noindent Osservazioni:
+\begin{itemize}
+\item[-] pattern$^*$ contiene una porzione dell'immagine che sarà usata come base per la ricerca di difetti sull'immagine stessa;
+\item[-] Eseguo la cross-correlazione tra l'immagine e poi ne calcolo la media. Fatto ciò setto un li
+\end{center}
+\end{itemize}
+
+\noindent Risultato:
+
+
+\end{document}

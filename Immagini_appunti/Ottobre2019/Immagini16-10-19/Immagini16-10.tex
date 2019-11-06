@@ -1,0 +1,90 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{longtable}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{\bfseries 16 ottobre 2019 }
+\lhead{\bfseries Segnali e immagini}
+
+\begin{document}
+
+\subsection*{Operazioni fondamentali con i segnali (pt. 2)}
+
+\subsubsection*{Cross-correlazione} 
+
+\begin{longtable}{| p{.15\textwidth} | p{.80\textwidth} |}
+\textbf{Cross - correlazione} & Dati due segnali continui $f_1(\tau), f_2(\tau)$, con $\tau \in R$, il segnale di cross-correlazione è
+\begin{align*}
+f_1 \otimes f_2 (t) = \int_{-\infty}^{+\infty} f_1^*(\tau)f_2(\tau - t)\, d \tau
+\end{align*}
+
+\noindent dove:
+\begin{itemize}
+\item[-] $f_1^*(\tau)$ è il complesso coniugato di $f_1$;
+\item[-] $f_1^*(\tau) == f_1(\tau)$ quando $f_1$ è reale;
+\item[-] Con $t = 0$ si ha l'intergrale di cross-correlazione;
+\end{itemize}
+
+\noindent La cross - correlazione (che consiste nell'integrazione del risultato del prodotto di due funzioni) permette di riconoscere il grado si somiglianza tra due segnali. 
+
+\noindent Il risultato è definito solo se l’integrale converge (se ho
+segnali nè di energia nè di potenza non ho
+convergenza). Più alto è il valore risultante dalla cross - correlazione, più simili sono i segnali. Quando $f_1$ = $f_2$, si parla di autocorrelazione.
+
+\noindent La cross - correlazione è però soggetta a problemi quando il range (asse y) dei valori dei due grafici differisce di molto.\\\\
+
+\textbf{cross - correlazione normalizzata} & Risolve i problemi della cross - correlazione. Viene definita come:
+
+\begin{align*}
+f_1 \overline{\otimes} f_2 (t) = \frac{\int_{-\infty}^{+\infty} f_1^*(\tau)f_2(\tau - t)\, d \tau}{\sqrt[]{E_{f_1}E_{f_2}}}
+\end{align*}
+
+\noindent dove $E_f$ rappresenta l'energia del segnale $f$.
+
+\noindent Osservazioni:
+\begin{itemize}
+\item[-] Il risultato della cross - correlazione normalizzata appartiene a $[-1, 1]$;
+\item[-] Se $|f_1 \overline{\otimes} f_2 (t)|$ = $1$, allora $f_1(\tau)$ = $\alpha f_2(\tau - t)$.
+\end{itemize}
+\\\\
+\textbf{Cross - correlaizone con segnali discreti} & Nel caso di \textbf{segnali disceti}, la cross - correlazione diventa:
+
+\begin{align*}
+x_1 \overline{\otimes} x_2 (x) =  \sum_{k=-\infty}^{+\infty} x_1^*(kx_2(k - n))
+\end{align*}
+
+\noindent con $k \in Z$ e la serie convergente. Se $x_1(k)$ è lungo $M$ e $x_2(k)$ è lungo $N$, allora $x_1 \overline{\otimes} x_2 (x)$ sarà lungo $M+N-1$.\footnote{Fintanto chè i due segnali non hanno valori sull'asse x in comune (sono completamente separati), il risultato della moltiplicazione sarà 0. Inizio ad avere valori appenta il segnale statico viene sormontato nel suo punto iniziale da quello che faccio shiftare tramito il suo punto finale (shifto da destra a sinistra).}\\\\
+
+\textbf{Cross - correlazione con immagini} & Nel caso in cui i due segnali siano \textbf{immagini}, la cross - correlazione diventa:
+\begin{align*}
+x_1 \otimes x_2 (m, n) =  \sum_{u=-\infty}^{+\infty} \sum_{v=-\infty}^{+\infty} x_1(u, v)x_2(u - m, v - n)
+\end{align*}
+
+\noindent dove $u,v,m,n \in Z$.
+
+\noindent Osservazioni:
+\begin{itemize}
+\item[-] Solitamente le due immagini hanno dimensione finita (e quindi le sommatorie sono limitate);
+\item[-] Il primo segnale $x_1$ prenden il nome di template (o matrice kernel), mentre il segnale $x_2$ prende il nome di immagine;
+\item[-] Di solito la metrice kernel ha dimensioni minori rispetto all'immagine;
+\item[-] Nel caso in cui $x_1$ = $x_2$, si parla di autocorrelazione 2D.
+\end{itemize}
+
+\end{longtable}
+\end{document}

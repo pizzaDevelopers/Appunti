@@ -1,0 +1,82 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{multicol}
+\usepackage{xcolor}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{\bfseries 24 ottobre 2019 }
+\lhead{\bfseries Segnali e immagini - laboratorio}
+
+\newcounter{main}
+\setcounter{main}{1}
+
+\lstnewenvironment{code}[1][firstnumber=\themain,name=main]
+  {\lstset{language=matlab,
+           basicstyle=\medium\ttfamily,
+           numbers=left,
+           basicstyle=\small,
+           columns=fullflexible,
+           #1
+          }
+}
+{\setcounter{main}{\value{lstnumber}}}
+
+
+\begin{document}
+
+\noindent \textbf{Esempio di Cross correlazione 2D:}
+
+\begin{code}
+%% Cross-correlazione 2D
+% Controllate con le slide se tornano i conti con la 
+ 
+X1 =[1     2     5     2     5;
+     3     4     5     4     2;
+     5     2     3     2     2;
+     2     3     2     4     2;
+     3     4     2     2     3];
+        
+X2 =[3     3     2;
+     2     3     4;
+     4     5     4];
+ 
+Corr = xcorr2(X1,X2)
+ 
+% Per fare prove ulteriori, si decommenti il codice qui sotto; 
+%X1 = round(unifrnd(1,5,5,5));
+%X2 = round(unifrnd(1,5,3,3));
+%Corr = xcorr2(X1,X2)
+
+\end{code}
+
+\noindent Risultato:
+\begin{code}
+Corr =
+
+     4    13    34    41    50    33    20
+    16    42    80    84    84    45    18
+    34    65    99    95    91    53    27
+    34    62    90    94    87    54    18
+    30    68    88    81    73    49    22
+    16    37    45    45    44    31    12
+     6    17    25    22    18    15     9
+\end{code}
+
+\end{document}
