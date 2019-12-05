@@ -1,0 +1,50 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{longtable}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{\bfseries 04 dicembre 2019 }
+\lhead{\bfseries Segnali e immagini}
+
+\begin{document}
+
+\subsection*{Trasformata di Fourier discreta}
+
+Dato un segnale reale continuo $f(t)$ di dominio illimitato e non periodico, campionato nel tempo con periodo (di campionamento) $\Delta T$, la sua trasformata di Fourier sarà una funzione continua, periodica (con periodo $1/\Delta T$) e con dominio illimitato:
+\begin{align*}
+\mathfrak{\tilde{f}}(t) = \tilde{F}(\mu) = \frac{1}{\Delta T} \sum_{n = -\infty}^{+\infty}F\left( \mu - \frac{n}{\Delta T}\right)
+\end{align*}
+
+\noindent Questa formulazione prevede però di conoscere la trsformata di Fourier teorica ($F$) del segnale di partenza, e raramente succede. Per evitare ciò, si manipola la formula fino ad ottenere
+\begin{align*}
+\tilde{F}(\mu) = \sum_{n = -\infty}^{+\infty}f_n e^{-j\pi \mu n \Delta T}
+\end{align*} 
+
+\paragraph*{Campionamento dello spettro} Il segnale ottenuto dall'ultima formula deve però essere campionato per poter essere rappresentato al pc.
+
+
+
+
+
+
+
+
+
+
+\end{document}

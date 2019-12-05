@@ -42,7 +42,7 @@ c_n = \frac{1}{T} \int_{-\frac{T}{2}}^{+\frac{T}{2}} f(t)e^{-j\frac{2 \pi n}{T} 
 
 \paragraph*{Rappresentazione dei coefficienti} I coefficienti possono essere rappresentati nelle forma rettangolare ($c_n = Re + jIm$) oppure nella forma polare ($c_n = |c_n|e^{j\theta_n}$).
 \begin{center}
-\includegraphics[scale=0.65]{1.pdf}
+\includegraphics[scale=0.4]{1.pdf}
 \end{center}
 
 \paragraph*{Spiegazione della funzione di sintesi} L'esponenziale $e^{j\frac{2 \pi n}{T} t}$ viene interpretata come un fasore, dove $\frac{2 \pi n}{T} t$ rappresenta la sua velocità angolare\footnote{Più grande è $n$ (che dipende dal coefficiente $c_n$), più giri vengono effettuati nell'unità di tempo, e quindi più grande è la velocità angolare.}. 
@@ -54,16 +54,83 @@ c_ne^{j\frac{2 \pi n}{T} t} = |c_n|e^{j\theta_n}e^{j\frac{2 \pi n}{T} t} = |c_n|
 
 \noindent In questo modo, praticamente, estendo il fasore iniziale $e^{j\frac{2 \pi n}{T} t}$ ad una lunghezza $|c_n|$, facendolo partire con un angolo $\theta_n$ (detto angolo di fase). 
 \begin{center}
-\includegraphics[scale=0.6]{2.pdf}
-
-\includegraphics[scale=0.6]{3.pdf}
+\includegraphics[scale=0.4]{2.pdf}
+\hspace{2cm}
+\includegraphics[scale=0.4]{3.pdf}
 \end{center}
 \vspace{1cm}
 \begin{tcolorbox}[title=\textbf{Caso coefficiente reale}]
 \begin{center}
-\includegraphics[scale=0.50]{reali.pdf}
+\includegraphics[scale=0.4]{reali.pdf}
 \end{center}
 \end{tcolorbox}
+
+
+\paragraph*{Spettro di ampiezza} Prendiamo come esempio la serie di Fourier per il segnale $f(t) = cos(2\pi t)$ con $T = 1$.
+
+\noindent Dal calcolo della funzione di analisi, posso ottenere i seguenti coefficienti:
+\begin{align*}
+c_{-1} = \frac{1}{2} \hspace{1cm} c_0 = 0 \hspace{1cm} c_1 = \frac{1}{2} \hspace{1cm} c_{i \le 2, i \ge 2} = 0
+\end{align*}
+\noindent Sostituendi $c_1$ nell'equazione di sintesi ottengo:
+\begin{align*}
+cos(2 \pi t) = \frac{1}{2}e^{-j2\pi t} + \frac{1}{2}e^{j2\pi t} = \frac{e^{j2\pi t} + e^{-j2\pi t}}{2}
+\end{align*}
+
+\begin{center}
+\includegraphics[scale=0.4]{4.pdf} 
+\hspace{1cm}
+\includegraphics[scale=0.4]{5.pdf}
+\end{center}
+
+\noindent I coefficienti $c_{-1}$ e $c_1$ rappresentano i moduli/ampiezze dei faseri complessi di frequenza $f_0 \cdot (-1)$ e $f_0 \cdot (-1)$\footnote{la frequenza fondamentale $\frac{2 \pi}{T}$ è anche chiamata $f_0$.}. Lo spettro di ampiezza è il seguente:
+\begin{center}
+\includegraphics[scale=0.4]{6.pdf}
+\end{center}
+
+\paragraph*{Spettro di fase} Prendiamo come esempio la serie di Fourier per il segnale $f(t) = sin(2\pi t)$ con $T = 1$.
+
+\noindent Dal calcolo della funzione di analisi, posso ottenere i seguenti coefficienti:
+\begin{align*}
+c_{-1} = -\frac{1}{2j} \hspace{1cm} c_0 = 0 \hspace{1cm} c_1 = \frac{1}{2j} \hspace{1cm} c_{i \le 2, i \ge 2} = 0
+\end{align*}
+\noindent PAssando alla forma esponenziale, i coefficienti possono essere riscritti come segue:
+\begin{align*}
+\pm \frac{1}{2j} =  j \cdot \mp \frac{1}{2}
+\end{align*}
+
+\begin{center}
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+        \begin{center}
+        \includegraphics[scale=0.4]{7.pdf}
+        \end{center}
+    }%
+}
+\hspace{0.3cm}
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+        \begin{center}
+        \includegraphics[scale=0.4]{8.pdf}
+        \end{center}
+    }%
+}
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+        \begin{center}
+        \includegraphics[scale=0.4]{9.pdf}
+        \end{center}
+    }%
+}
+\end{center}
+
+\noindent Poichè, in questo caso, i coefficienti $c_n$ appartengono al dominio complesso, rappresento, oltre all'ampiezza, anche lo spettro di fase (gli angoli del fasore). 
+\newpage
+\noindent Gli spettri sono i seguenti:
+\begin{center}
+\includegraphics[scale=0.4]{10.pdf}
+\end{center}
 
 \paragraph*{Proprietà della serie di Fourier} Lo spettro di ampiezza e di fase sono funzioni nel dominio delle frequenze che formano lo spettro di Fourier. Nel caso di segnali periodici, lo spettro di Fourier gode delle seguenti proprietà:
 \begin{itemize}
@@ -72,7 +139,6 @@ c_ne^{j\frac{2 \pi n}{T} t} = |c_n|e^{j\theta_n}e^{j\frac{2 \pi n}{T} t} = |c_n|
 \item[-] Se i coefficienti $c_n$ sono reale, allora lo spettro di fase non esiste;
 \item[-] Entrambi gli spettri sono funzioni a pettine, definite su frequenze $\frac{2 \pi  n}{T}$, con $n \in Z$ (ovvero frequenze multiple rispetto a quella fondamentale $\frac{2 \pi}{T}$).
 \end{itemize}
-
 
 
 
