@@ -1,0 +1,341 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,positioning,calc}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{arrows.meta}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\pagestyle{fancy}
+\chead{}
+\rhead{\bfseries 11 novembre 2019}
+\lhead{\bfseries Basi di dati}
+
+\begin{document}
+
+\section*{\underline{Progettazione logica}}
+La progettazione logica consiste nella traduzione dello schema ER in uno specifico modello logico, in questo caso quello relazionale.
+
+\subsection*{Costrutti principali}
+\begin{longtable}{| p{.20\textwidth} | p{.70\textwidth} |}
+\textbf{Domini di base} & Consistono nei domini da cui si scelgono i valori delle
+proprietà delle istanze di informazione da
+rappresentare (es: caratteri, stringhe, interi, decimali a virgola mobile, ...).
+\\\\
+\textbf{Costrutto relazione} & Il costrutto relazione può essere rappresentato come una tabella formata da una lista di colonne, dove:
+\begin{itemize}
+\item[-] I dati sono scritti nelle righe;
+\item[-] Ogni riga descrive le
+caratteristiche di una istanza dell’informazione da rappresentare;
+\item[-] I valori contenuti nelle colonne descrivono sempre la stessa
+proprietà delle istanze di informazione da rappresentare.
+\end{itemize}
+
+Esempio:
+\begin{center}
+\begin{tabular}{lll}
+			MILANO  & $20100$ & $1300000$ \\
+			VERONA  & $37100$ & $350000$ \\
+			BRESCIA & $25100$ & $250000$\\
+		\end{tabular}
+\end{center}
+
+\medskip
+
+\textbf{Definizione formale come insieme di ennuple (lists)}: dati $n$ insiemi di valori (domini) $D_1, \dots , D_n$ con $n > 0$ e indicato con $D_1 \times\dots \times D_n$ il loro prodotto cartesiano:
+			
+			\[
+				D_1 \times \dots \times D_n = \{ (v_1, \dots, v_n) \: | \: 
+				v_1 \in D_1 \wedge \dots \wedge v_n \in D_n \}
+			\]
+			
+			una relazione $\rho$ di grado $n$ è un qualsiasi sottoinsieme di 
+			$D_1 \times \dots \times D_n$ :
+			\[
+				\rho \subseteq D_1 \times \dots \times D_n
+			\]
+			dove:
+			\begin{itemize}
+				\item[-] $(v_1, \dots, v_n)$ è una ennupla della relazione;
+				\item[-] $|\rho|$ è la cardinalità della relazione (numero di ennuple).
+			\end{itemize}
+
+I domini $D_1, \dots , D_n$ possono essere a cardinalità infinita, mentre le relazioni sono sempre a cardinalità finita; non esiste alcun ordinamento delle tuple; non è possibile duplicare una ennupla; i valori all'interno delle ennuple sono ordinati.
+
+\medskip
+
+Esempio
+
+\medskip
+
+Relazione delle città:
+\begin{center}
+$\rho = \{(MILANO, 20100, 1.300.000),	$
+	
+$(VERONA, 37100, 350.000),$
+
+$(BRESCIA, 25100, 250.000) \}$	
+	
+$\rho \subseteq D_1 \times D_2 \times D_3$
+	
+		\begin{itemize}
+			\item[-] $D_1 =$ Stringhe di caratteri;
+			\item[-] $D_2 =$ Numeri interi;
+			\item[-] $D_3 =$ Numeri interi.
+		\end{itemize}
+\end{center}
+\end{longtable}
+
+\begin{longtable}{| p{.20\textwidth} | p{.70\textwidth} |}
+ & Se t è una ennupla $(v_1 , \dots, v_n )$ il valore posto in i-esima posizione si indica con la notazione:
+\begin{center}
+$t[i]$
+\end{center}
+
+Poichè questa modalità di accesso ai valori non è efficace per l'uso
+			pratico delle relazioni, si preferisce quindi assegnare un nome
+			alle colonne, portando all'introduzione della definizione di
+			relazione come insieme di tuple.
+
+\medskip
+\medskip
+
+\textbf{Definizione formale come insueme di tuple (mappings)}: sia $X$ un insieme di nomi e sia $\Delta$ l'insieme di tutti i domini di
+			base ammessi dal modello. Allora si può definire una funzione
+			\[
+				DOM: \: X \, \rightarrow \, \Delta
+			\]
+			che associa ad ogni nome $A$ di $X$ un dominio $DOM(A)$ di $\Delta$. 
+			I nomi di $X$ si dicono attributi.
+			
+			Una tupla su $X$ è una funzione:
+		
+			\[
+				t : \: X \, \rightarrow \, \bigcup_{A \in X} DOM (A) 
+			\]
+			dove
+			\[
+				t [ A ] = v \in DOM (A)
+			\]
+			Una relazione su $X$ è un insieme di tuple su $X$, dove $X$ è
+			l'insieme di attributi della relazione.
+
+\medskip
+
+Esempio
+
+\medskip
+		Relazione delle città:
+		\begin{center}
+		\begin{itemize}
+			\item[-] X = \{Nome, CAP, Abitanti\};
+			\item[-] DOM(Nome) = Stringhe di caratteri;
+			\item[-] DOM(CAP) = Numeri interi;
+			\item[-] DOM(Abitanti) = Numeri interi.
+		\end{itemize}
+		\end{center}
+		\[
+			\rho_X = \{ t_1 , t_2 , t_3 \}
+		\]
+		\begin{tabular}{lll}
+			$t_1$ [Nome] $=$ MILANO & $t_2$ [Nome] $=$ VERONA & $t_3 [\dots] = \dots$ \\
+			$t_1$ [CAP] $= 20100$ & $t_2$ [CAP] $= 37100$ & \\
+			$t_1$ [Abitanti] $= 1.300.000$ & $t_2$ [Abitanti] $= 350.000$ & 
+		\end{tabular}
+
+\medskip
+
+Una relazione è un insieme di tuple e quindi non può contenere tuple duplicate; i domini per gli attributi possono essere solo domini di base (
+			non sono ammessi altri domini, né il prodotto cartesiano di
+			domini); in generale una base di dati relazionale è costituita da più
+			relazioni.
+
+\end{longtable}
+
+\subsection*{Progettazione}
+Nel caso in cui in una relazione, ovvero una tabella, si uniscono concetti disomogenei e con un'esistenza autonoma (come raggruppare tutti i dati nella stessa tabella), si rischia di creare ridondanza, ovvero una ripetizione inutile di più tuple.
+
+\noindent La ridondanza può, a sua volta, creare le seguenti anomelie:
+\begin{itemize}
+			\item Anomalia di \textbf{aggiornamento} -> per aggiornare il valore di
+			un attributo si è obbligati a modificare tale valore su più tuple
+			della base di dati.
+			\item Anomalia di \textbf{inserimento} -> per inserire una nuova istanza
+			di un concetto è necessario inserire valori al momento
+			sconosciuti (sostituibili con valori nulli) per gli attributi non
+			disponibili.
+			\item Anomalia di \textbf{cancellazione} -> per cancellare un'istanza di un
+			concetto è necessario cancellare valori ancora validi oppure
+			inserire valori nulli per gli attributi da cancellare.
+		\end{itemize}
+
+\noindent Il metodo principale per eliminare le ridondanze consiste nel dividere la tabella in tabelle più piccole.\\
+
+\noindent Esempio:\\
+
+\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+			
+			% RELATIONS
+			
+			\node (countrytitle) {\textbf{PROPRIETÀ}};
+			
+			\node [relation=9, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (proprietà)
+			{%
+				\nodepart{one}   CodiceFiscale
+				\nodepart{two} Cognome
+				\nodepart{three} Nome
+				\nodepart{four} DataNas
+				\nodepart{five} CodiceCatasto
+				\nodepart{six} Via
+			    \nodepart{seven} NumeroCivico 
+			    \nodepart{eight} Subalterno
+			    \nodepart{nine} Tipo	};
+		
+		\end{tikzpicture}
+
+\noindent \\La tabella unica PROPRIETÀ può essere divisa come segue:\\
+
+\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+			
+			% RELATIONS
+			
+			\node (countrytitle) {\textbf{PROPRIETARIO}};
+			
+			\node [relation=4, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (proprietà)
+			{%
+				\nodepart{one} CodiceFiscale
+				\nodepart{two} Cognome
+				\nodepart{three}Nome
+				\nodepart{four}DataNas};
+
+		 \end{tikzpicture}
+
+
+\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+		
+			% RELATIONS
+			
+			\node (countrytitle) {\textbf{UNITÀ\_IMMOBILIARE}};
+			
+			\node [relation=5, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (proprietà)
+			{%
+				\nodepart{one}CodiceCatasto
+				\nodepart{two}Via
+				\nodepart{three}NumeroCivico 
+				\nodepart{four}Subalterno
+				\nodepart{five}Tipo	};
+			
+		\end{tikzpicture}
+
+\noindent \\La suddivisione dell'esempio sopra, però, non riesce a rappresentare la stessa informazione della tabella unica, sebbene ne elimini la ridondanza. Infatti non conserva l'informazione che descrive
+			l'associazione tra proprietario e unità immobiliare.
+			
+\noindent Per mantenere anche questa informazione è necessario aggiungere una terza tabella che, per sua natura, conterrà delle ridondanze (seppur limitate).\\
+
+\noindent Esempio\\
+
+\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+		
+		% RELATIONS
+		
+		\node (countrytitle) {\textbf{PROPRIETARIO}};
+		
+		\node [relation=4, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (proprietà)
+		{%
+			\nodepart{one}   CodiceFiscale
+			\nodepart{two} Cognome
+			\nodepart{three} Nome
+			\nodepart{four} DataNas};
+		
+		\end{tikzpicture}
+		
+		\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+		
+		% RELATIONS
+		
+		\node (countrytitle) {\textbf{UNITÀ\_IMMOBILIARE}};
+		
+		\node [relation=5, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (proprietà)
+		{%
+			\nodepart{one} CodiceCatasto
+			\nodepart{two} Via
+			\nodepart{three} NumeroCivico
+			\nodepart{four} Subalterno
+			\nodepart{five} Tipo};
+		
+		\end{tikzpicture}
+		
+		\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+		
+		% RELATIONS
+		
+		\node (countrytitle) {\textbf{PROPRIETÀ}};
+		
+		\node [relation=2, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (proprietà)
+		{%
+			\nodepart{one} CodiceFiscale
+			\nodepart{two} CodiceCatasto};
+		
+		\end{tikzpicture}
+
+\noindent \\La nuova tabella replicherà
+			parte degli attributi, scegliendo tra questi quelli che
+			hanno la proprietà di identificare il concetto verso il
+			quale si vuole generare il legame.
+			
+			
+\paragraph*{Modello valued - based} In base a questo, si può definire il modello relazionale come valued - based, ovvero:
+\begin{itemize}
+			\item[-] È totalmente indipendente dalla rappresentazione fisica (tutta
+			l'informazione è nei valori) e non ci sono meccanismi per
+			gestire riferimenti o puntatori tra istanze di informazione;
+			\item[-] I legami logici tra tuple diverse si realizzano attraverso la
+			replicazione di alcuni attributi (che hanno la proprietà di
+			identificare il concetto e quindi di rappresentarlo): il legame
+			tra due tuple si intende stabilito quando esse presentano gli
+			stessi valori negli attributi replicati;
+			\item[-] È facile trasferire i dati da una base di dati all'altra;
+			\item[-]  È rappresentato solo ciò che è rilevante per l'applicazione.
+		\end{itemize}
+			
+\subsection*{Terminologia}			
+		\paragraph*{Schema di una relazione} Uno schema di una relazione è costituito dal nome della
+		relazione e da un insieme di nomi per i suoi attributi:
+		\[
+			R(A_1 , \dots, A_n ) \quad \textup{oppure} \quad R(A_1 :\:D_1 , \dots, A_n :\: D_n )
+		\]
+		dove $DOM(A_i ) = D_i$
+		
+		\paragraph*{Schema di una base di dati} Uno schema di una base di dati è un insieme di schemi di relazione:
+		\[
+			S = \{R_1 (A_{1,1},\dots, A_{1,n_1} ), \dots , R_m (A_{m,1} , \dots, A_{m,n_m} )\}
+		\]
+		dove $R_1 \neq\dots \neq R_m$
+		
+		\paragraph*{Istanza di una relazione} Un'istanza di una relazione di schema $R(A_1 , \dots, A_n )$ con
+		$X = \{A_1 , \dots, A_n \}$:
+		è un insieme $r$ di tuple su $X$.
+
+		\paragraph*{Istanza di una base di dati} Un'istanza di una base di dati di schema 
+		$S = \{R_1 (A_{1,1} , \dots,A_{1,n_1} ), \dots, R_m (A_{m,1} , \dots, A_{m,n_m} )\}$:
+		
+		è un insieme di istanze di relazioni $db = \{r_1 , \dots, r_m \}$
+		dove ogni $r_i$ è un'istanza della relazione di schema $R_i (A_{i,1} , \dots, A_{i,n_i} )$.
+			
+			
+			
+\end{document}

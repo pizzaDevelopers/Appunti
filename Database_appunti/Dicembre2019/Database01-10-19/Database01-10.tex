@@ -1,0 +1,305 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,positioning,calc}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{arrows.meta}
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{\bfseries 02-03-09 dicembre 2019 }
+\lhead{\bfseries Basi di dati}
+
+\begin{document}
+
+\begin{center}
+\section*{Algebra relazionale}
+\end{center}
+L'algebra relazionale è utilizzata per l'interrogazione di una base di dati. Specifica il procedimanto per ottenere il risultato.
+
+\noindent L'algebra relazionale consiste in un insieme di operazioni chiuse sulle relazioni e si compone di operatori di tipo:
+\begin{itemize}
+\item[-] Unario -> $op(r_1) \rightarrow r_2$;
+\item[-] Binario -> $op(r_1, r_2) \rightarrow r_3$;
+\end{itemize}
+
+\noindent Dal punto di vista funzionale, gli operatori possono essere divisi in tre gruppi:
+\begin{itemize}
+\item[-] Operatori insiemistici;
+\item[-] Operatori specifici;
+\item[-] Operatori di giunzione (o Join), che uniscono più tabelle imponendo condizioni.
+\end{itemize}
+
+\noindent Dal punto di vista della derivabilità, possono essere classificati in:
+\begin{itemize}
+\item[-] Operatori di base;
+\item[-] Operatori derivati (ottenuti combinando operatori di base).
+\end{itemize}
+
+\subsection*{\underline{Operatori insiemistici}}
+Gli operatori insiemistici applicano alle relazioni le operazioni dell'algebra legate agli insiemi. Questo è possibile poichè le relazioni sono insiemi di tuple omogenee.\\
+
+\noindent \textbf{Definizione}: Due tuple si dicono omogenee se hanno gli stessi attributi.\\\
+
+\noindent Gli operatori insieminìstici si possono applicare, quindi, solo a relazioni con lo stesso schema.\\
+
+\noindent Date $r_1$ e $r_2$ relazioni di schema $R_1(x)$ e $R_2(X)$, è possibile applicare loro i seguenti operatori insiemistici:
+\begin{longtable}{| p{.15\textwidth} | p{.80\textwidth} |}
+\textbf{Unione} & Operatore binario di base.
+\begin{align*}
+r_1 \cup r_2 = r_3
+\end{align*}
+
+\begin{itemize}
+\item[-] Contenuto di $r_3$ -> $\{t | (t \in r_1) \text{ } OR \text{ } (t \in r_2) \}$;
+\item[-] Schema di $r_3$ -> insieme $X$, non cambia.
+\end{itemize}
+
+Cardianlità: $\begin{cases} 
+|r_1 \in r_2| \le |r_1|\text{} +\text{} |r_2|\\ 
+|r_1 \in r_2| \ge MAX(|r_1|, |r_2|)
+\end{cases}$ 
+
+\\\\
+\textbf{Differenza} & Operatore unario di base.
+\begin{align*}
+r_1 \text{} - \text{} r_2 = r_3
+\end{align*}
+
+\begin{itemize}
+\item[-] Contenuto di $r_3$ -> $\{t | (t \in r_1) \text{ } AND \text{ } (t \notin r_2) \}$;
+\item[-] Schema di $r_3$ -> insieme $X$, non cambia.
+\end{itemize}
+
+Cardianlità: $\begin{cases} 
+|r_1 \text{} - \text{} r_2| \le |r_1|\\ 
+|r_1 \text{} - \text{} r_2| \ge 0
+\end{cases}$ 
+
+\\\\
+\textbf{Intersezione} & Operatore binario derivato.
+\begin{align*}
+r_1 \cap r_2 = r_1\text{} - \text{} (r_1 \text{} - \text{} r_2) 
+\end{align*}
+
+Cardianlità: $\begin{cases} 
+|r_1 \cap r_2| \le min(|r_1|, |r_2|)\\ 
+|r_1 \cap r_2| \ge 0
+\end{cases}$ 
+
+\\\\
+\end{longtable}
+
+\subsection*{\underline{Operatori specifici}}
+Data $r$ relazione di schema $R(X)$ con $X = \{A_1, ..., A_n\}$, gli operatori specifici applicabili sono:
+\begin{longtable}{| p{.16\textwidth} | p{.79\textwidth} |}
+\textbf{Ridenominazione} & Operatore unario di base. Consente la modifica dello schema di una relazione (ovvero permette di modificare il valore dei suoi atributi).
+
+Dato un insieme di attributi $y = \{ B_1, ..., B_n\}$, con $|y| = |b|$, allora:
+\begin{align*}
+\rho_{A_1, ..., A_n \rightarrow B_1, ..., B_n} = \{t | \exists t' \in r \text{ tale che } \forall i \in \{\, ..., n\} \text{ allora } t'[A_i] = t[B_i]\}
+\end{align*}
+
+\begin{itemize}
+\item[-] Contenuto di $r_3$ -> risultato ;
+\item[-] Schema di $r_3$ -> y.
+\end{itemize}
+
+\underline{Esempio}
+
+\begin{multicols}{2}
+			Popolazione:
+			
+			\begin{tabular}{ccc}
+				\toprule
+				\textbf{Nome} & \textbf{Cap} & \textbf{Abitanti} \\
+				\midrule
+				Verona & $37100$ & $35000$  \\
+				Vicenza & $50100$ & $15000$
+			\end{tabular}
+			
+			\columnbreak
+			
+			Città:
+			
+			\begin{tabular}{ccc}
+				\toprule
+				\textbf{Comune} & \textbf{Cap} & \textbf{Popolazione} \\
+				\midrule
+				Milano & $20100$ & $2500000$
+			\end{tabular}
+		\end{multicols}
+		
+		Non posso fare l'unione, devo prima ridenominare:
+		\[
+			\rho_{\textup{Abitanti} \: \rightarrow \: \textup{Popolazione}}
+			(\textup{Popolazione}) \cup (\textup{Città})
+		\]
+		\\\\
+\textbf{Selezione} & Operatore unario di base. Consente di estrarre da una relazione solo le tuple che soddisfano una certa condizione $F$ (taglio in orizzontale).
+\begin{align*}
+				\sigma_{F}(r) = 
+				\begin{cases}
+					\textup{schema} \quad X \\
+					\textup{istanza} \quad \{ t \, | \, \exists t' \in r : \, F(t) (\textup{la tupla t rende vera F})  \}
+				\end{cases}
+\end{align*}
+
+La condizione $F$ è una formula proposizionale che si ottiene combinando attraverso i connettivi logici $\: \wedge, \vee, \neg \:$ formule \emph{atomiche} del tipo:
+
+			\begin{itemize}
+				\item[-] $A \theta B$;
+				\item[-] $A \theta c$.
+			\end{itemize}		
+			Dove:
+			
+			\begin{itemize}
+				\item[-] $\theta \in \{ =, \neq, >, <,  \geq, \leq \}$;
+				\item[-] $A, B \in X$;
+				\item[-] $c \in DOM(A)$ o è compatibile con $DOM(A)$.
+			\end{itemize}
+			
+Una formula atomica del tipo $A\theta B$ è vera sulla tupla $t \in r$ se vale:
+\begin{align*}
+t[A] \text{ oppure } t[B]
+\end{align*}
+
+Una formula atomica del tipo $A\theta c$ è vera sulla tupla $t \in r$ se vale:
+\begin{align*}
+t[A] \text{ oppure } c
+\end{align*}
+
+Cardianlità: $0 \ge |\sigma(r)| \ge |r|$\footnote{$F$ è tanto più selettiva quanto più la cardinalità di avvicina a 0.}
+\\\\
+\textbf{Proiezione} & Operatore unario di base. Consente di eliminare alcuni attributi delle tuple di una relazione.
+
+Sia $y = \{ A_1, ..., A_n\}$ un sottoinsieme degli attributi di $X$, allora:
+\begin{align*}
+\Pi_Y (r) = \;
+				\begin{cases}
+					\textup{schema} \quad Y \\
+					\textup{istanza} \quad \{ t \, | \, \exists t' \in r : \, t = t'[Y]  \}
+				\end{cases}
+\end{align*}
+
+dove $t'[Y]$ è una tupla $E$ su $Y$ tale che 
+			$\forall A_i \in Y_i$ vale $E[A_i] = t'[A_i]$.
+\newline
+\newline
+Cardianlità: $\begin{cases} 
+1 \le |Pi_Y (r)| \le |r|& \text{ in generale}\\ 
+|Pi_Y (r)| = |r|& \text{ se $y$ è una superchiave per $r$}
+\end{cases}$ 
+\end{longtable}
+
+\subsection*{\underline{Operatori di giunzione}}
+Gli operatori di giunzione consentono di unire in un'unica relazione tuple contenute in due relazioni distinte costruendo coppie di tuple che soddisfano una condizione di joint e generando per ogni coppia una tupla nel risultato.
+
+\begin{multicols}{3}
+				\begin{tabular}{cccc}
+					$\bar{r}_1$ & A   	& B & C    \\
+					\midrule
+							    & $a_1$ & $b_2$ & $c_1$ \\
+							    & $a_2$ & $b_2$ & $c_2$\\
+							    & $a_3$ & $b_1$ & $c_2$\\
+							    & $a_4$ & $b_4$ & $c_3$
+	 			\end{tabular}
+	 			
+	 			\columnbreak
+	 			
+	 			\begin{tabular}{ccc}
+	 				$\bar{r}_2$ & C	& D		\\
+	 				\midrule	
+				 				& $c_1$ & $d_0$ \\
+				 				& $c_2$ & $d_9$ 
+	 			\end{tabular}
+	 			
+	 			\columnbreak
+	 			
+			\begin{tabular}{ccccc}
+				$r_1 \Join r_2$ & A		& B		  & C & D		\\
+				\midrule
+			    & $ a_1 $ & $ b_1 $ & $ c_1 $ & $d_0$\\
+			    & $ a_2 $ & $ b_2 $ & $ c_2 $ & $d_9$\\
+			    & $ a_3 $ & $ b_1 $ & $ c_2 $ & $d_9$
+			\end{tabular}
+\end{multicols}
+
+\noindent Gli operatori di giunzione si dividono in:
+\begin{longtable}{| p{.15\textwidth} | p{.80\textwidth} |}
+\textbf{Join naturale} & Operatore binario di base. La condizione di join è implicita e dipende dallo schema di relazioni coinvolte. Due tuple costituiscono una coppia generata dal join se presentano gli stessi valori (uguaglianza) negli attributi comuni alle due relazioni.
+\newline
+\newline
+Siano $r_1$ e $r_2$ due relazioni di schema $R_1(X_1)$ e $R_2(X_2)$, allora:
+\begin{align*}
+r_1 \Join r_2 = 
+				\begin{cases}
+					\textup{schema:} X_1 \cup X_2 \\
+					\textup{istanza:} \, \{ t\, | \: \exists t_1 \in r_1 \, \wedge \exists t_2 \in r_2 : \quad
+						t_1 = t[X_1] \, \wedge t_2 = t [X_2]  \} 
+				\end{cases}
+\end{align*}
+
+Nel caso in cui non vi siano attributi in comune, il join naturale è detto prodotto cartesiano e produce tutte le coppie possibili.
+\newline
+
+Cardianlità: 
+\begin{itemize}
+\item[-] \textbf{$0 \le |r_1 \Join r_2| \le |r_1| \cdot |r_2|$    } in generale;
+\item[-] \textbf{$|0 \le |r_1 \Join r_2| \le |r_1|$} se $x_1 \cap x_2$ è superchiave per $r_2$;
+\item[-] \textbf{$|r_1 \Join r_2| = |r_1|$} se $x_1 \cap x_2$ è soggetto a un vincolo di integrità referenziale che vincola $x_1 \cap x_2$ su $r_1$ rispetto a $r_2$ e $x_1 \cap x_2$ è superchiave per $r_2$.
+\end{itemize}
+
+Proprietà:
+\newline
+
+Date $r_1$ e $r_2$ due relazioni di schema $R_1(X_1)$ e $R_2(X_2)$, allora:
+\begin{itemize}
+\item[-] Il join naturale $r_1 \Join r_2$ si dice completo se $$\forall t_1 \in r_1 \text{ tali che } \exists t \in r_1 \Join r_2 \text{ vale che } t[X_1] = t_1 $$ $$\wedge$$ $$\forall t_2 \in r_2 \text{ tali che } \exists t \in r_1 \Join r_2 \text{ vale che } t[X_2] = t_2 $$
+In questo caso la cardinalità diventa: $MAX(|r_1|, |r_2|) \le |r_1 \Join r_2| \le |r_1| \cdot |r_2|$;
+\end{itemize}
+\end{longtable}
+
+\begin{longtable}{| p{.15\textwidth} | p{.80\textwidth} |}
+ & \begin{itemize}
+\item[-] Il join naturale è commutativo;
+\item[-] Il join naturale è associativo;
+\item[-] Se le due relazioni hanno lo stesso schema ($X_1 = X_2$) allora $$r_1 \Join r_2 = r_1 \cap r_2$$
+\item[-] Se le due relazioni hanno schemi disgiunti ($X_1 \cap X_2 = \emptyset$) allora $$r_1 \Join r_2 = r_1 \text{ x } r_2 \text{ (prodotto cartesiano)}$$
+\end{itemize}
+\\\\
+\textbf{$\Theta$-join} & Operatore binario derivato. Produce come risultato il join tra $r_1$ e $r_2$ dove la condizione di join è esplicitata come parametro. Per poterlo usare è necessario che le due relazioni abbiano schemi discìgiunti ($X_1 \cap X_2 = \emptyset$).
+\begin{align*}
+r_1 \Join_F r_2 
+\end{align*}
+Un $\theta$-join si dice EQUI-join se la condizione $F$ è una congiunzione di uguaglianza tra attributi di $r_1$ e $r_2$.
+\end{longtable}
+
+\subsubsection*{Equivalenza tra gli operatori di join}
+			Il join naturale tra due relazioni $r_1$ di schema $X_1$ e $r_2$ di schema $X_2$ dove 
+			$ X_1 \cap X_2 = \{ c_1, \dots , c_m \} $ equivale alla seguente espressione contenente un $\Theta$-Join :
+			\[
+				r_1 \Join r_2 \, \equiv \, \Pi_{X_1 \cap X_2} ( r_1 \Join_{c_1' = c_1 \wedge \dots \wedge c_m' = c_m}
+					( \rho_{c_1, c_2, \dots , c_m \, \rightarrow \, c_1', c_2', \dots , c_m'} (r_2) ) )
+			\]
+
+
+\end{document}

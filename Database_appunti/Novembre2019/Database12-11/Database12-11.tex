@@ -1,0 +1,393 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,positioning,calc}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{arrows.meta}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\pagestyle{fancy}
+\chead{}
+\rhead{\bfseries 11 novembre 2019}
+\lhead{\bfseries Basi di dati}
+
+\begin{document}
+
+\subsection*{Valori nulli}
+Non sempre nella base di dati esistono tutti i valori per ogni specifica tupla. Infatti può capitare che:
+\begin{itemize}
+\item[-] Il valore di quell'attributo sia inesistente per quella tupla;
+\item[-] Il valore di quell'attributo sia sconosciuto (in quel momento) per quella tupla.
+\end{itemize}
+
+\noindent Per poter gestire queste situazioni viene iterodotto il valore nullo -> ora gli attributi di una tupla possono assumere un valore entro il loro dominio o il valore nullo.
+
+\paragraph*{Definizione} Una tupla su X è una funzione:
+			\[
+				t : \: X \rightarrow \{NULL\} \cup ( \bigcup_{A\in X} DOM (A))
+			\]
+			dove:
+			\[
+				t [ A ] = v \in DOM (A) \vee t[A] = NULL
+			\]
+
+\noindent La presenza di valori nulli è comunque accettata solo per specifici attributi; non è possibile avere tuple di soli valori nulli; negli attributi replicati la presenza di valori nulli può rendere inutilizzabile l'informazione.
+
+\subsection*{Vincoli di integrità}
+Poichè può essere necessario introdurre vincoli sulla popolazione (istanza) di una base di dati, ad esempio perchè non tutte le possibili istanze sono corrette
+rispetto al sistema informativo considerato, è stato introdotto il concetto di vincolo di integrità.
+
+\noindent Un vincolo di integrità è una condizione (espressa da un predicato)
+che deve essere sempre soddisfatta
+da ogni istanza della base di dati.\\
+
+\noindent Esempio\\
+
+\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+			
+			% RELATIONS
+			
+			\node (countrytitle) {\textbf{TRENO}};
+			
+			\node [relation=7, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (proprietà)
+			{%
+				\nodepart{one} Numero
+				\nodepart{two} OraPart
+				\nodepart{three} MinutoPart
+				\nodepart{four} Categoria
+				\nodepart{five} Destinazione
+				\nodepart{six} OraArr
+				\nodepart{seven} MinutoArr};
+			
+			\end{tikzpicture}
+			
+			\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+			
+			% RELATIONS
+			
+			\node (countrytitle) {\textbf{FERMATA}};
+			
+			\node [relation=4, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (proprietà)
+			{%
+				\nodepart{one} NumTreno
+				\nodepart{two} Stazione
+				\nodepart{three} OraFer
+				\nodepart{four} MinutoFer};
+			
+			\end{tikzpicture}
+
+\noindent \\Vincoli:
+\begin{itemize}
+				\item[-] $\forall t \in TRENO : \: t[\textup{OraPart}] \in \{0,1,\dots, 23\}$;
+				\item[-] $\forall t \in TRENO : \: t[\textup{MinutoPart}] \in \{0,1,\dots, 59\}$;
+				\item[-] $\forall t \in TRENO : \: t[\textup{Numero}] > 0$;
+				\item[-] $\forall t \in TRENO : \: t[\textup{Numero}] > 5000 \Rightarrow t[\textup{Categoria}] = \textup{'regionale'}$;
+				\item[-] $\forall t, t' \in TRENO : \: t \neq t' \Rightarrow 
+				t[\textup{Numero}] \neq t' [\textup{Numero}] $;
+				\item[-] $\forall f \in FERMATA : \: \exists t \in TRENO 
+				: \: t[\textup{Numero}] = f [\textup{NumTreno}] $;
+				\item[-] $\forall t \in TRENO : \: t[\textup{Categoria}] = \textup{'regionale'} \Rightarrow 
+				\exists f \in FERMATA : \: f [\textup{NumTreno}] = t[\textup{Numero}] $.
+			\end{itemize}
+
+\noindent I vincoli possono essere classificati come segue:
+
+\begin{longtable}{| p{.15\textwidth} | p{.75\textwidth} |}
+\textbf{Vincoli di dominio} & Impongono una restrizione sul dominio dell'attributo
+			di una relazione.
+			
+			\medskip
+			
+			Esempio
+			
+			\medskip
+			\begin{center}
+			\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+			
+			% RELATIONS
+			
+			\node (countrytitle) {\textbf{TRENO}};
+			
+			\node [relation=7, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (proprietà)
+			{%
+				\nodepart{one} Numero
+				\nodepart{two} OraPart
+				\nodepart{three} MinutoPart
+				\nodepart{four} Categoria
+				\nodepart{five} Destinazione
+				\nodepart{six} OraArr
+				\nodepart{seven} MinutoArr};
+			
+			\end{tikzpicture}
+			\end{center}
+\end{longtable}
+
+\begin{longtable}{| p{.15\textwidth} | p{.75\textwidth} |}		
+ & I vincoli per il dominio di un attributo
+			di TRENO sono:
+			\begin{itemize}
+				\item[-] $\forall t \in TRENO : \:
+				 t[\textup{OraPart}] \in \{0,1,\dots, 23\}$;
+				\item[-] $\forall t \in TRENO : \:
+				t[\textup{MinutoPart}] \in \{0,1,\dots, 59\}$;
+				\item[-] $\forall t \in TRENO : \:
+				t[\textup{Numero}] > 0$.
+			\end{itemize}
+\\\\
+\textbf{Vincoli di tupla} & Impongono una restrizione alla combinazione di valori
+			che una tupla della relazione può assumere
+			indipendentemente dalle altre tuple.
+			
+			\medskip
+			
+			Esempio
+			
+			\medskip
+		
+			\begin{center}
+			\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+			
+			% RELATIONS
+			
+			\node (countrytitle) {\textbf{TRENO}};
+			
+			\node [relation=7, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (proprietà)
+			{%
+				\nodepart{one} Numero
+				\nodepart{two} OraPart
+				\nodepart{three} MinutoPart
+				\nodepart{four} Categoria
+				\nodepart{five} Destinazione
+				\nodepart{six} OraArr
+				\nodepart{seven} MinutoArr};
+			
+			\end{tikzpicture}
+			\end{center}
+			
+			Il vincolo di tupla è:
+			\[
+				\forall t \in TRENO : \:
+				t[\textup{Numero}] > 5000 \Rightarrow t[\textup{Categoria}] = 
+				\textup{'regionale'}
+			\]		
+\\\\
+\textbf{Vincoli intrarelazionali} & Impongono una restrizione al contenuto di una
+			relazione e specificano una condizione che ogni tupla
+			della relazione deve soddisfare rispetto alle altre tuple
+			della medesima relazione.
+			
+			Una sottocategoria importante di tali vincoli include i
+			\textbf{vincoli di chiave}:
+			\begin{itemize}
+				\item[-] Superchiave;
+				\item[-] Chiave candidata;
+				\item[-] Chiave primaria.
+			\end{itemize}
+
+\textbf{Superchiave}: data una relazione di schema $R(X)$, un insieme di attributi $K$, sottoinsieme di $X$, è SUPERCHIAVE per
+				$R(X)$ se, per ogni istanza $r$ di $R(X)$ vale la seguente
+				condizione:
+				\[
+					\forall t, t' \in r : 
+					\: t \neq t' \Rightarrow t[K] \neq t' [K]
+				\]
+				dove:
+				\[
+					t[K] \neq t' [K] \equiv \exists A_i \in K : \:
+					 t[A_i] \neq t' [A_i]
+				\]
+				
+\textbf{Chiave candidata}: data una relazione di schema $R(X)$, un insieme di
+				attributi $K$, sottoinsieme di $X$, è CHIAVE CANDIDATA
+				(o CHIAVE) per $R(X)$, se $K$ è superchiave per $R(X)$ e
+				vale la seguente condizione:
+				\[
+					\neg \exists K' \subset K : \: K' 
+					\textup{è superchiave per} R(X)
+				\]
+			
+				Esiste sempre una chiave candidata $K$ per una
+				relazione $R(X)$.	
+	
+\medskip	
+				
+\textbf{Chiave primaria}: data una relazione di schema $R(X)$ la sua CHIAVE
+				PRIMARIA è la chiave candidata scelta per \textbf{identificare
+				le tuple della relazione}.
+				
+				Una chiave primaria $K$ ha le seguenti caratteristiche:
+				\begin{itemize}
+					\item Non contiene mai valori nulli
+					\item Su $K$ il sistema genera una struttura d'accesso ai dati
+					(o indice) per supportare le interrogazioni.
+				\end{itemize}
+				
+				La chiave primaria si rappresenta sottolineando l'attributo.							
+\end{longtable}
+\newpage
+\begin{longtable}{| p{.15\textwidth} | p{.78\textwidth} |}
+ & Esempio 1 
+\medskip
+\begin{center}
+\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+			
+			% RELATIONS
+			
+			\node (countrytitle) {\textbf{TRENO}};
+			
+			\node [relation=7, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (proprietà)
+			{%
+				\nodepart{one} Numero
+				\nodepart{two} OraPart
+				\nodepart{three} MinutoPart
+				\nodepart{four} Categoria
+				\nodepart{five} Destinazione
+				\nodepart{six} OraArr
+				\nodepart{seven} MinutoArr};
+			
+			\end{tikzpicture}
+			\medskip
+			\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+			
+			% RELATIONS
+			
+			\node (countrytitle) {\textbf{FERMATA}};
+			
+			\node [relation=4, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (proprietà)
+			{%
+				\underline{NumTreno}
+				\nodepart{two}\underline{Stazione}
+				\nodepart{three} OraFer
+				\nodepart{four} MinutoFer};
+			\end{tikzpicture}
+			
+\end{center}
+			
+\noindent Considerando i seguenti sottoinsiemi di $X$, dire se, rispetto al
+			contesto applicativo, il sottoinsieme è superchiave o no e, se è
+			superchiave, dire se è anche chiave:
+			\begin{itemize}
+				\item $K_1=\{\textup{Numero}\}$
+				\item $K_2=\{\textup{Numero, Categoria}\}$
+				\item $K_3=\{\textup{OraPart, MinutoPart, Destinazione, Categoria}\}$
+			\end{itemize}	
+			
+Esempio 2
+\medskip
+
+\begin{center}
+\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+			
+			% RELATIONS
+			
+			\node (countrytitle) {\textbf{TRENO}};
+			
+			\node [relation=7, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (proprietà)
+			{%
+				\underline{Numero}
+				\nodepart{two} OraPart
+				\nodepart{three} MinutoPart
+				\nodepart{four} Categoria
+				\nodepart{five} Destinazione
+				\nodepart{six} OraArr
+				\nodepart{seven} MinutoArr};
+			
+			\end{tikzpicture}
+\end{center}
+			\\\\
+\textbf{Vincoli interrelazionali} & Impongono una restrizione al contenuto di una
+			relazione e specificano una condizione che ogni tupla
+			della relazione deve soddisfare rispetto alle tuple di
+			altre relazioni della base di dati.
+			
+			Una sottocategoria importante di tali vincoli include i
+			vincoli di integrità referenziale (o vincoli sulle
+			chiavi esportate).
+			
+			\medskip
+			
+\textbf{Vincoli di integrità referenziale}: Un vincolo di integrità referenziale tra un insieme di
+				attributi $Y=\{A_1 , \dots, A_p \}$ di $R_1$ e un insieme di attributi $K=\{K_1 , \dots, K_p \}$, chiave primaria di un'altra relazione $R_2$, è soddisfatto se, per ogni istanza $r_1$ di $R_1$ e per ogni
+				istanza $r_2$ di $R_2$ vale la seguente condizione:
+				\[
+					\forall t \in r_1 : \: \exists s \in r_2 : \:
+					 \forall i \in \{1,\dots, p\} : \: t[A_i] = s[K _i]
+				\]	
+				
+				\medskip
+				
+\textbf{Vincoli di integrità referenziale con valori nulli}: Un vincolo di integrità referenziale tra un insieme di
+				attributi $Y=\{A_1 , \dots, A_p \}$ di $R_1$ e un insieme di attributi $K=\{K_1 , \dots, K_p \}$, chiave primaria di un'altra relazione $R_2$, è soddisfatto se, per ogni istanza $r_1$ di $R_1$ e per ogni istanza $r_2$ di $R_2$ vale la seguente condizione:
+				\[
+					\forall t \in r_1 : \: \exists s \in r_2 : \:
+					 (\forall i \in  \{1,\dots, p\} : \: t[A_i ] = s[K_i ]) \vee
+				(\exists i \in \{1,\dots, p\} : \: t[A_i ] = NULL)
+				\]
+				
+Il vincolo di integrità referenziale si rappresenta tramite una freccia che parte dall'attributo e punto alla tabello di origine dell'attributo stesso.
+
+\medskip
+
+Esempio
+
+\medskip
+
+\begin{flushright}
+\begin{tikzpicture}[relation/.style={rectangle split, rectangle split parts=#1, rectangle split part align=base, draw, anchor=center, align=center, text height=3mm, text centered}]\hspace*{-0.3cm}
+			
+			% RELATIONS
+			
+			\node (countrytitle) {\textbf{TRENO}};
+			
+			\node [relation=7, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of countrytitle.west, anchor=west] (treno)
+			{%
+				\underline{Numero}
+				\nodepart{two} OraPart
+				\nodepart{three} MinutoPart
+				\nodepart{four} Categoria
+				\nodepart{five} Destinazione
+				\nodepart{six} OraArr
+				\nodepart{seven} MinutoArr};
+			
+			\node  [below=1.3cm of treno.west, anchor=west] (fermatatitle) {\textbf{FERMATA}};
+			
+			\node [relation=4, rounded corners, rectangle split horizontal, rectangle split part fill={lightgray!50}, anchor=north west, below=0.6cm of fermatatitle.west, anchor=west] (fermata)
+			{%
+				\underline{NumTreno}
+				\nodepart{two}\underline{Stazione}
+				\nodepart{three} OraFer
+				\nodepart{four} MinutoFer};
+			
+			% FOREIGN KEYS
+			
+			\draw[-latex] (fermata.one south) -- ++(0,-0.2) -| ($(fermata.one south) + (12,0)$) |- ($(countrytitle.east) + (0,0)$);
+			\end{tikzpicture}
+\end{flushright}
+
+				
+									 
+\end{longtable}
+
+
+
+
+
+
+
+
+
+\end{document}
