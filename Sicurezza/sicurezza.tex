@@ -1,0 +1,153 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{listings}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\begin{document}
+
+\chapter{Basi della sicurezza}
+
+\section{Introduzione}
+La sicurezza ha il compito di:
+\begin{itemize}
+\item[-] \textbf{Individuare quali sono le risorse da progettere} -> hardware, software, dati, collegamenti e apparati di rete (se il mio HW è protetto ma non poso comunicare all'esterno, sono isolato).
+La protezione delle risorse si rifà a cinque aspetti fondamentali:
+\begin{enumerate}
+\item Confidenzialità: nessun utente deve poter ottenere o dedurre dal sistema info che non è autorizzato a conoscere (riservatezza + privacy);
+\item Integrità: deve essere impedita l'alterazione diretta e indiretta da parte di utenti/processi non autorizzari oppure in seguiro a eventi accidentali (bug software) (integrità dati + integrità sistema);
+\item Disponibilità: specifici dati devono essere forniti solo agli utenti che hanno diritto di accedere, nei tempi e nei modi previsti;
+\item Autenticità: le info non devono essere state manipolate;
+\item Tracciabilità: ogni azione deve essere tracciabile, in modo da supportare la non ripudiabilità e l'isolamento della responsabilità.
+\end{enumerate}
+\item[-] \textbf{Individuare i modi in cui le risorse sono minacciate} -> Le minacce possono compormettere le propietà di confidenzialità (es: lettura non autorizzata, copia SW non autorizzata), integrità (es: file modificati, eseguibile modificato) e disponibilità (es: file cancellati, eseguibili cancellati). Una minaccia è una possibile violazione della sicurezza. La violazione effettiva è un attacco. Gli attacchi possono essere:
+\begin{enumerate}
+\item Attivi: modifica del sistema/risorse;
+\item Passivi: acquisizione delle info senza modificare le risorse;
+\item Interni: iniziati da un'entità interna al sistema
+\item Esterni: effettuati da entità esterne, solitamente tramite la rete.
+\end{enumerate}
+\noindent Gli attacchi possono essere classificati in:
+\begin{enumerate}
+\item Disclosure: accesso non autorizzato ai dati;
+\item Deception: accettazione di dati falsi;
+\item Disruption: interruzione o prevenzione di operazioni corrette;
+\item Usurpation: controllo non autorizzato di parti del sistema. 
+\end{enumerate}
+\item[-] \textbf{Individuare i modi per proteggere le risorse} -> non esiste un modo unico per proteggere le risorse, in quanto i modi cambiano nel tempo (sistemi sempre più complessi, condizioni impreviste). 
+
+\noindent Nella progettazione dei sistemi è necessario tenere in considerazione i possibili attacchi. Le soluzioni per la sicurezza possono essere contro-intuitive. I meccanismi di sicurezza possono essere usati sia a livello fisico sia a livello logico.
+\\
+
+\noindent Nonostante non esiste un modo unico per proteggere i dati, esistono delle "best practices" per farlo. Le principali sono:
+\begin{itemize}
+\item[-] I meccanismi di sicurezza devono essere semplici ed efficaci (aspetto economico dei meccanismi);
+\item[-] Si specificano dei comportamenti sicuri, mentre tutti gli altri comportamenti non specificati devono rientrare in quello di default (fail-safe default)
+\item[-] Se il codice è open-source, la comunità può lavorare sulla sicurezza (progettazione aperta);
+\item[-] Ogni operazione deve essere tracciabile (tracciabilità delle operazioni);
+\item[-] Differenziare i privilegi in base al tipo di utente (separazione dei privilegi);
+\item[-] Isolare i sottosistemi per evitaare che l'attacco si propaghi agli altri componenti (isolamento dei sottosistemi);
+\item[-] Modularità del sistema.
+\end{itemize}
+
+\noindent Le "best practices" sono seguite per realizzare una politica di sicurezza, ovvero un'insieme di specifiche che determinano cosa si può e cosa non si può fare (alto livello). Le politiche di sicurezza sono realizzate tramite meccanismi. Un meccanismo può occuparsi di:
+\begin{itemize}
+\item[-] Prevenire un attacco, come la crittografia;
+\item[-] Scoprire un attacco, come un monitoraggio sui paccehtti;
+\item[-] Recuperare da un attacco, come isolare il sistema in caso di attacco.
+\end{itemize} 
+
+\noindent I meccanismi possono essere implementati a basso livello, dove sono più semplici ma dimostrabilmente corretti, o ad alto livello, dove sono più complesso e più difficili da dimostrare come corretti. 
+\\
+\noindent I principali meccanismi sono: crittografia, firma digitale, autenticazione e controllo degli accessi, rilevamento degli eventi, gestione degli audit, recovery. 
+\end{itemize}
+
+\paragraph*{Come ottenere un sistema sicure} In generale per ottenere un sistema sicuro devo: descrivere il funzionamento desiderato dal sistema, tradurre le specifiche in componenti che le implementano, creare un sistema che rispetta le specifiche. Ovviamento devo verificare costantemente la sicurezza dell'implementazione.
+
+\paragraph*{Considerazione implementative} Prima di progettare un sistema, è necessario effettuare delle considerazioni sull'implementazione della sicurezza. Queste considerazioni possono essere: analisi costi-benefici della sicurezza, analisi della probabilità di subire un attacco e dei possibili danni, aspetti legali, problemi organizzativi.
+
+\section{Cenni di crittografia}
+
+La crittografia è la scienza che si occupa di proteggere l'info rendendola sicura, in modo che l'utente non autorizzato che ne entra in possesso non sia in grado di comprenderla.
+
+\noindent La crittoanalisi è invece la scienza che cerca di aggirare o superare le protezioni crittografiche, accedendo alle info protette.
+
+\noindent Un algoritmo crittografico è una funzione che prende in ingresso un messaggio e un parametro detto \textbf{chiave} e produce un messaggio trasformato. L'algoritmo può occuparsi della cifratura o della decifratura.
+
+Gli algoritmi crittografici sono di due categorie:
+		\begin{itemize}
+			\item[-] A chiave \textit{simmetrica}: le chiavi di cifratura e decifratura sono uguali;
+			\item[-] A chiave \textit{asimmetrica}: vengono usate due chiavi differenti, una chiave è pubblica, l'altra è privata.
+		\end{itemize}
+	
+\noindent Ogni algoritmo crittografico deve essere robusto, vale a dire:
+		\begin{itemize}
+			\item[-] Deve essere difficile ottenere il testo in chiaro senza chiave da quello cifrato;
+			\item[-] Dato un testo cifrato e uno in chiaro, deve essere difficile ottenere la chiave di cifratura.
+		\end{itemize}
+	
+\noindent Bisogna tenere sempre a mente che \textbf{nessun algoritmo crittografico è assolutamente sicuro}, quindi un algoritmo di dice \textit{computazionalmente sicuro} se il costo necessario a violarlo è superiore a quello dell'informazione contenuta, oppure il tempo necessario a violarlo è superiore al tempo di vita dell'informazione.
+		
+\noindent In ogni caso, per analizzare un algoritmo crittografico, bisogna mantenere presente che la segretezza deve risiedere nella chiave, non nella struttura dell'algoritmo.
+
+\paragraph*{Attacco a forza bruta} La crittoanalisi tenta di ricostruire il testo in chiaro senza conoscere la chiave di decifratura. L'attacco più banale è quello a forza bruta, ovvero tentare di decifrare il messaggio provando tutte le chiavi possibili (ovviamente devo avere delle info sul formato del testo in chiaro, per sapere se ho trovato al chiave corretta).
+
+\paragraph*{Principio di Kerckhoff} Secondo questo principio, la robustezza deve stare nella chiave (si suppone l'algoritmo noto).
+		
+		\subsection{Crittografia a chiave simmetrica}
+		La crittografia a chiave simmetrica utilizza una chiave condivisa e gli stessi algoritmi per cifrare e decifrare le informazioni (ovviamente la chiave deve essere scambiata su canali sicuri).
+
+\noindent Esempi ci cifratura a chiave simmestrica sono:
+\begin{itemize}
+\item[-] Cifratura di Cesare: si basa sullo shift dell'alfabeto, la chiave è il numero di posizioni shiftate;
+\item[-] Cifratura monoalfabeta: si basa sulla permutazione dell'alfabeto (riordino casuale), la chiave è il nuovo alfabeto ottenuto;
+\item[-] Cifratura a blocchi: dati k bit, i possibili $2^k$ input vengono permutati. Nello specifico, divido l'input in blocchi, associando ad ognuno una permutazione differente, ricodtruisco l'input e lo permuto nuovamente. Il processo può essere reiterato n volte prima di ritornaree il dato.
+\end{itemize}
+\noindent Nei primi due casi è facile ottenere la chiave perchè si può procedere con l'analisi delle frequenze, ovvero l'analisi di quanto spesso in un testo si presenta una stessa sillaba.Nel terzo caso l'analisi delle frequenza non è possibile perchè ogni lettera ha più cifrature.
+		
+\noindent Esempi di agloritmi a chiave simmetrica sono:
+		\begin{itemize}
+			\item[-] DES: chiavi a 56 bit, ormai obsoleto;
+			\item[-] Triplo-DES: un DES applicato 3 volte con chiavi diverse (di lunghezza 112 o 168 bit);
+			\item[-] AES: usa chiavi a 128, 192 o 256 bit.
+		\end{itemize}
+	
+\noindent Tutti questi algoritmi sono soggetti al problema della distribuzione delle chiavi. 
+		
+\subsection{Crittografia a chiave asimmetrica}
+In questo tipo di crittografia ogni utente ha una coppia di chiavi, una \textbf{pubblica}, che viene resa nota, e una \textbf{privata}, che viene mantenuta segreta. L'idea è che il messaggio venga cifrato con la chiave pubblica del destinatario, che potrà poi decifrarlo con la sua chiave privata.
+		
+\noindent L'uso di algoritmi a chiave asimmetrica comporta i seguenti vantaggi:
+		\begin{itemize}
+			\item[-] Non è più necessario scambiarsi chiavi;
+			\item[-] La stessa chiave pubblica può essere usata da più utenti.
+		\end{itemize}
+	
+\noindent I requisiti principali di un sistema crittografico di questo tipo sono:
+		\begin{itemize}
+			\item[-] Deve essere semplice la generazione delle chiavi;
+			\item[-] Devono essere semplici le operazioni di cifratura/decifratura quando si hanno le relative chiave;
+			\item[-] Deve essere computazionalmente impraticabile ricavare la chiave privata da quella pubblica;
+			\item[-] Deve essere computazionalmente impraticabile ricavare il testo in chiaro avendo il testo cifrato e la chiave pubblica.
+		\end{itemize}
+\noindent Un esempio di algoritmo simmetrico è RSA, che si basa sulla difficoltà di scomporre un numero in fattori primi. Le chiavi usate da RSA hanno le dimensioni di $2^{10}$ bit. \\
+		
+\noindent Gli algoritmi asimmetrici richiedono molte più risorse degli algoritmi a chiave simmetrica (sono infatti anche molto più lenti), e vengono usati per scambiarsi una chiave di sessione che verrà poi usata da un algoritmo simmetrico sicuro, computazionalmente più efficiente.
+		
+		\section{Integrità}
+		Lo scopo storico della crittografia è quello di garantire la privacy, ossia come garantire che un'informazione ricevuta provenga effettivamente dall'utente che ci si aspetta l'abbia mandata.
+		
+		\subsection{Funzioni Hash}
+
+\end{document}

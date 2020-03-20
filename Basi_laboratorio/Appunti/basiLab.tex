@@ -1,0 +1,478 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{charter}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{multicol}
+\usepackage{xcolor}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\newcounter{main}
+\setcounter{main}{1}
+
+\lstnewenvironment{code}[1][firstnumber=\themain,name=main]
+  {\lstset{language=SQL,
+           basicstyle=\medium\ttfamily,
+           basicstyle=\small,
+           columns=fullflexible,
+           #1
+          }
+}
+{\setcounter{main}{\value{lstnumber}}}
+
+\begin{document}
+
+\chapter{SQL - PostgreSQL}
+
+\noindent Il linguaggio SQL si compone di tre parti:
+
+\begin{itemize}
+\item[-] Data Definition Language (DDL), utilizzato per definire le strutture dati e la definizione dei vincoli di integrità;
+\item[-] Data Manipulation Language (DML), utilizzato per inserire, aggiornare e cancellare dati. Contiene anche il Data Query Language, utilizzato per le interrogazioni;
+\item[-] Data Control Languade, utilizzato per modificare la base di dati.
+\end{itemize}
+
+\noindent Un database si compone di uno o più schemi (directory), che possono contenere una o più tabelle.
+
+\section{Data Definition Language}
+
+\paragraph{Operazioni principali} Le operazioni principali del DDL sono:
+\begin{enumerate}
+\item \underline{Creazione tabella}:
+\begin{code}
+	CREATE TABLE nomeTabella (
+    		nomeColonna TIPO VINCOLO,
+    		...    		
+	);
+\end{code}
+
+\item \underline{Eliminazione tabella}:
+\begin{code}
+	DROP TABLE nameTabella;
+\end{code}
+
+\item \underline{Modifica tabella}:
+\begin{itemize}
+\item[-] Inserimento nuovo attributo:
+\begin{code}
+	ALTER TABLE tabellaEsistente ADD COLUMN attributo tipo;
+\end{code}
+
+\item[-] Rimozione attributo:
+\begin{code}
+	ALTER TABLE tabellaEsistente DROP COLUMN attributo; 
+\end{code}
+
+\item[-] Modifica nome attributo:
+\begin{code}
+	ALTER TABLE tabellaEsistente RENAME COLUMN vecchioNome TO nuovoNome; 
+\end{code}
+
+\item[-] Aggiunta vincolo di tabella:
+\begin{code}
+	ALTER TABLE tabellaEsistente ADD vincolo; 
+\end{code}
+
+\item[-] Inserimento o eliminazione del vincolo associato all'attributo:
+\begin{code}
+	ALTER TABLE tabellaEsistente ALTER COLUMN attributo
+		SET VINCOLO (valore) "oppure" DROP vincolo;
+\end{code}
+
+\item[-] Inserimento nuovo vincolo di integrità referenziale:
+\begin{code}
+	ALTER TABLE tabellaEsistente ADD CONSTRAINT definizioneVincolo;
+\end{code}
+
+\item[-] Rimozione nuovo vincolo di integrità referenziale:
+\begin{code}
+	ALTER TABLE tabellaEsistente DROP CONSTRAINT nomeVincolo;
+\end{code}
+
+\noindent Il paramentro $nomeVincolo$ è il nome dato durante la dichiarazione. Se non viene dato, il DBMS ne assegna lui uno.
+\end{itemize}
+\end{enumerate}
+
+\paragraph*{Domini elementari} I domini elementari sono:
+\begin{longtable}{ p{.30\textwidth}  p{.65\textwidth}}
+\textbf{CHAR} & permette di rappresentare singoli caratteri o stringhe di lunghezza fissa (CHAR(20) == stringa di 20 caratteri). Se la stringa non raggiunge la dimensione fissata, il sistema aggiunge degli spezi. I caratteri devono essere dichiarati all'interno di apici singoli (' ');
+\\\\
+\textbf{VARCHAR(dim)} & permette di rappresentare stringhe di dimensione variabile (VARCHAR(20) indica che la dimensione max della stringa è 20 caratteri). Le stringhe devono essere dichiarate all'interno di apici singoli (' ');
+\\\\
+\textbf{TEXT} & Stringa di dimensione infinita (postgreSQL);
+\\\\
+ \textbf{BOOL} & permette di rappresentare i valori booleani. Può assumere tre valori: TRUE, FALSE, NULL;
+ \\\\
+ \textbf{SMALLINT} & permette di rappresentare numeri interi compresi tra -32.768 e +32.767. Equivale al tipo short di Java;
+\\\\
+ \textbf{INTEGET} & permette di rappresentare numeri compresi tra -2$^{31}$ e +2$^{31}$-1. Equivale al tipo int di Java;
+ \vspace{0.2cm}
+\\
+ \textbf{REAL} & permette di rappresentare valori in virgola mobile con una precisione di 6 cifre decimali;
+\\\\
+ \textbf{DOUBLE PRECISION} & Come REAL, ma la precisione è di 15 cifre decimali;
+\\\\
+ \textbf{NUMERIC} (o \textbf{DECIMAL}) & permette di rappresentare numeri decimali in virgola fissa. Il numero è rappresentato in modo esatto (nessun errore di approssimazione in seguito a operazioni aritmetiche). 
+ 
+Solitamente il dominio si specifica come NUMERIC(precisione, scala), dove precisione indica il numero di cifre significative (destra e sinistra della virgola), mentre scala indica il numero di cifre dopo la virgola (NUMERIC(5, 2) mi permette di rappresentare numeri come 100.01);
+\\\\
+ \textbf{DATE} & permette di rappresentare date nel formato YYYY-MM-DD. Le date devono essere specificate tra apici singoli (' ');
+\\\\
+ \textbf{TIME[(precisione)][WITH TIME ZONE]} &  permette di rappresentare un orario all'interno della giornata. La precisione permette di indicare i decimali da usare per rappresentare frazioni del secondo. 
+ 
+WITH TIME ZONE permette di specificare un fuso orario (nomeFusoOrario o $+-$hour:minute come differenza con l'ora di Greenwich);
+\\\\
+  \textbf{TIMESTAMP[(precisione)][ WITH TIME ZONE]} & DATE + TIME (TIMESTAMP);
+\\\\
+ \textbf{INTERVAL[fields][(p)]} & permette di rappresentare una durata temporale. Il campo fields permette di limitare l'estensione dell'intervallo, mentre il campo p permette di specificate la precisione delle frazioni di secondo (se fields contiene anche i secondi). Gli intervalli possono essere specificati in più modi:
+	\begin{enumerate}
+	\item Formato SQL -> es: '3 4:05:06' == 3 giorni, 4 ore, 5 minuti, 6 secondi. Il massimo rappresentabile sono i giorni;
+	\item Formato ISO -> es: 'P1Y2M3DT4H5S6' == 1 anno, 2 mesi, 3 giorni, 4 ore, 5 minuti, 6 secondi. La lettera P denota l'inizio della data, la lettera T l'inizio dell'ora.
+\end{enumerate}
+\end{longtable}
+	
+\paragraph*{Domini specifici} È possibile creare un dominio specifico (partendo da uno elementare) nel seguente modo:
+\begin{code}
+		CREATE DOMAIN nome AS tipoBase dominioBase
+			[vincolo].
+\end{code}
+\noindent Solitamente come vincolo si usa il CHECK.
+\\
+
+\noindent Esempio:
+\begin{code}
+		CREATE DOMAIN giorniSettimana AS CHAR(3) 
+			CHECK(VALUE IN('LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'));
+\end{code}
+
+\paragraph*{Vincoli} In base a cosa vengono associati, i vincoli si dividono in:
+\begin{itemize}
+\item[-] Vincoli di attributi: solitamente si specifica dopo il nome dell'attributo e si riferisce solo a quell'attributo;
+\item[-] Vincoli di tabella: solitamente specificati dopo tutti gli attributi, si riferiscono a gruppi di attributi.
+\end{itemize}
+
+\noindent I vincoli principali sono:
+\begin{longtable}{ p{.30\textwidth}  p{.65\textwidth}}
+\textbf{DEFAULT} & si utilizza per specificare un valore di base da assegnare al campo nel caso non venga specificato. Posso assegnare anche il valore DEFAULT.
+\newline
+
+Esempio: 
+\begin{code}
+	prezzo NUMERIC DEFAULT 9.99;
+\end{code}
+\\
+\textbf{CONSTRAIT} & si utilizza per assegnare un nome ad un gruppo di vincoli (es: è più semplice rimuoverli). Raggruppa tutti i vincoli che lo seguono fino alla prima virgola.
+\newline
+
+Esempio: 
+\begin{code}
+	price NUMERIC CONSTRAINT pPrice NOT NULL CHECK (price > 0);
+\end{code}
+\\
+\textbf{NOT NULL} & si utilizza per indicare che il campo non può essere nullo (Attenzione: una stringa vuota non è NULL);
+\newline
+
+Esempio:
+\begin{code}
+	nome VARCHAR (20) NOT NULL;
+\end{code}
+\\
+\textbf{CHECK} & si utilizza per indicare che l'attributo deve rispettare la condizione indicata nel check. Il vincolo viene rispettato se la sua espressione booleana è vero o nulla. Se l'espressione è false, il sistema dà errore;
+\newline
+
+Esempio:
+\begin{code}
+	stipendi NUMERIC CHECK(stipendio >= 0.0);
+	CHECK(nome <> cognome);
+\end{code}
+\\\\
+\textbf{NULL} & si utilizza per indicare che il campo deve essere nullo;
+\\
+\textbf{UNIQUE} & si utilizza per imporre che l'attributo sia superchiave, ovvero utti i valori assegnati a quell'attributo devono esser diversi tra loro (oppure NULL). Se si riferisce a più attributi, ogni gruppo deve avere sempre almeno un valore diverso;
+\newline
+
+Esempio:
+\begin{code}
+	nome VARCHAR (20) UNIQUE;
+	UNIQUE (nome, cognome);
+\end{code}
+\\
+\textbf{PRIMARY KEY} & si utilizza per identificare una chave primaria. Si ottiene dalla composizione di UNIQUE + NOT NULL. Questo attributo può essere può essere inserito una sola volta in ogni tabella.  
+\newline
+
+Esempio:
+\begin{code}
+	matricola CHAR(6) PRIMARY KEY;
+	PRIMARY KEY(nome, cognome);
+\end{code}
+\end{longtable}
+
+\paragraph*{Valore NULL} Il valore NULL di SQL è un valore speciale:
+\begin{itemize}
+\item[-] NULL = NULL è falso. Il NULL è sempre diverso da se stesso;
+\item[-] Per eseguire confronti col NULL si devono usare specifiche operazioni.
+\end{itemize}
+
+\paragraph*{Vicoli di integrità referenziale} Un vincolo di integrità referenziale crea un legame tra i valori di un attributo, o insiemi di attributi, della tabella corrente, detta interna (o slave), e i valori di un attributo, o insieme di attributi, di un'altra tabella, detta esterna (o master). Il legame impone che:
+\begin{itemize}
+\item[-] Il valore dell'attributo di ogni riga della tabella interna sia presente tra quelli della tabella esterna. Se il valore nella tabella interna è NULL (es: non ho specificato NOT NULL e le ho assegnato NULL) allora il vincolo è soddisfatto;
+\item[-] Il valore dell'attributo di ogni riga della tabella interna sia presente anche tra quelli della tabella esterna, a meno che questo non sia NULL. L'attributo, nella tabella esterna, deve essere vincolato da UNIQUE o PRIMARY KEY (basta che identifichi le righe della tabella esterna, non deve essere necessariamente la sua chiave primaria).
+\end{itemize}
+
+\noindent Esistono due modi per esprimere questo vincolo:
+\begin{enumerate}
+\item REFERENCES -> si utilizza quando il vincolo è usato solo su un attributo della tabella interna. Si dichiara come segue:
+\begin{code}
+	CREATE TABLE tabellaInterna(
+		...
+		attributo tipo REFERENCES
+			tabellaEsterna(attributoChiave);
+	);
+\end{code}
+\item FOREIGN KEY -> si utilizza  quando il vincolo è usato su più attributi della tabella interna. Si dichiara come segue:
+\begin{code}
+	CREATE TABLE tabellaInterna(
+		...
+		attributo1 tipo,
+		...
+		
+		FOREIGN KEY(attributo1, ...) REFERENCES tabellaEsterna (nomeAttributo1Esterna, ...);
+	);
+\end{code}
+\end{enumerate}
+					\newpage
+\noindent Attenzione: 
+\begin{itemize}
+\item[-] La tabella master deve essere creata prima della tabella slave;
+\item[-] Il dominio dei due attributi collegato deve essere compatibile (meglio uguale);
+\item[-] Senza l'uso di comandi specifici, un valore dell'attributo collegato può essere eliminato dalla tabella master solo se non compare nell'attributo della tabella slave.
+\\
+
+\noindent I voncoli di integrità referenziali possono essere rimossi e agginti anche dopo la creazione della tabella (vedi sopra).
+\end{itemize}
+
+\section{Data Management Language}
+
+\paragraph*{Operazioni principali} Le operazioni principali del DML sono:
+\begin{enumerate}
+\item \underline{Popolazione delle tabelle}:
+\begin{code}
+	INSERT INTO tabellaEsistente (elencoAttributi)
+		VALUES (elencoValori), 
+		...
+		;
+\end{code}
+\noindent Posso aggiungere una o più righe con ogni comando VALUES.
+
+\item \underline{Modifica dei valori di una riga}:
+\begin{code}
+	UPDATE tabellaEsistente
+		SET attributo = espressione,
+		...
+		[WHERE condizione];
+\end{code}
+\noindent Se non specifico il WHERE, la modifica verrà applicata a tutte le righe. Devo ripetere UPDATE per ogni modifica differente dalla precedente.
+
+\item \underline{Eliminazione righe}:
+\begin{code}
+	DELETE FROM tabellaEsistente 
+	[WHERE condizione];
+\end{code}
+\end{enumerate}
+
+\paragraph*{Operatori SQL} Alcuni operatori particolari sono:
+\begin{longtable}{ p{.30\textwidth}  p{.55\textwidth}}{Concatenzazione stringhe} & {||}
+\\
+{Confronto e assegnazione} & {=}
+\end{longtable}
+
+\subsection{Data Query Language}
+Il processo per recuperare dati dal database è chiamato query/interrogazione.
+
+\noindent Il comando SQL per effettuare una query è:
+\begin{code}
+	SELECT [ DISTINCT ]
+	[ * | expression [[ AS ] output_name ] [ , ...] ]
+	[ FROM from_item [ , ...] ]
+	[ WHERE condition ]
+	[ GROUP BY grouping_element [ , ...] ]
+	[ HAVING condition [ , ...] ]
+	[ { UNION | INTERSECT | EXCEPT } [ DISTINCT ]
+		other_select ]
+	[ ORDER BY expression [ ASC | DESC | USING operator ]]
+	...
+\end{code}
+
+Nello specifico:
+\begin{longtable}{ p{.20\textwidth}  p{.75\textwidth}}
+\textbf{*} & ritorna tutti gli attributi delle tabelle indicate.
+\\\\
+\textbf{DISTINCT} & elimina le tuple risultato duplicate.
+\\\\
+\textbf{AS} & permette di assegnare un nome a expression (assegna un nome per la colonna risultato nella tabella risultato temporanea). I nuovi nome possono essere del tipo:
+\begin{itemize}
+\item[-] NOME -> viene interpretato come nome. Non è case sensitive;
+\item[-] "Nome" -> viene interpretato come Nome. È case sensitive.
+\end{itemize}
+\\\\
+\textbf{FROM} & specifica la tabella da cui prendere le tuple. Il campo from\_item può realizzare uno dei seguenti valori:
+\begin{itemize}
+\item[-] Prodotto cartesiano:
+\begin{code}
+	nomeTabella [[AS] alias [(alisaColonna [, ...])]]
+\end{code}
+\noindent Se sono presenti due o più tabelle, si esegue il prodotto cartesiano tra tutte le tabelle. Se ci sono attributi con lo stesso nome, nel SELECT questi vengono identificati con nomeTabella.nomeAttributo;
+\item[-] Query Innstata:
+\begin{code}
+	(other_select) [AS] nomeRisultato [(aliasColonna [, ...])]
+\end{code}
+\noindent Con questa forma creo una query innestata. Il risultato della SELECT interna è la tabella con nome nomeTisultato su cui fare la query corrente;
+\item[-] Join:
+\begin{code}
+	from_item [NATURAL] join_type from_item [ON condition]
+\end{code}
+\noindent Questa forma permette di selezionare un sottoinsieme del prodotto cartesiano di due o più tabelle. Il campo join\_type speciﬁca il tipo di join. I tipi principali sono riassunti nelle slide seguenti. 
+\item[-] Altre opzioni più complesse.
+\end{itemize}
+\\\\
+\textbf{WHERE} & è seguita da una condizione booleana. La condizione può contenere:
+\begin{itemize}
+\item[-] Espressioni relative alle colonne richieste nella prima riga;
+\item[-] \textbf{AND}, \textbf{OR}, \textbf{NOT};
+\item[-] =, <>, <, >, <=, >=;
+\item[-] Costanti appartenenti ai domini di base;
+\item[-] \textbf{BETWEEN} val1 \textbf{AND} val2 -> ritorna true se il valore è compreso tra val1 e val2 (entrambi compresi);
+\item[-] \textbf{IN}(val1, val2, ...) -> ritorna true se il valore è uguale a val2 o val2 o ...;
+\item[-] \textbf{IS} [\textbf{NOT}] \textbf{NULL};
+\end{itemize}  
+\noindent Nella WHERE non è possibile utilizzare i nomi dell'AS assegnati nella prima riga.
+
+\noindent Possono anche comparire i seguenti operatori:
+\begin{itemize}
+\item[-] LIKE -> operatore di pattern matching. Le stringhe di controllo del LIKE si compongono con due caratteri speciali:
+	\begin{itemize}
+	\item[-] "\_" == 1 carattere qualsiasi;
+	\item[-] "\%" == 0 o più caratteri qualsiasi;
+	\end{itemize}
+\end{itemize}
+\\
+ &	\begin{itemize}
+ \item[]
+\begin{itemize}
+ \item[]
+ Esempio:
+	
+	\noindent Tutti gli studenti di una città che inizia con 'V' e finisce con 'a':
+	\begin{code}
+	SELECT cognome, nome, citta FROM Studente 
+	WHERE citta LIKE 'V%a';
+	\end{code}
+	
+\noindent Per ignorare maiuscole/minuscole si utilizza ILIKE.
+
+\item[-] SIMILAT TO -> è una versione più estesa del LIKE che accetta un sottoinsieme delle espressioni POSIX (versione SQL). Le stringhe di controllo compongono con:
+	\begin{itemize}
+	\item[-] "\_" == 1 carattere qualsiasi;
+	\item[-] "\%" == 0 o più caratteri qualsiasi;
+	\item[-] "\{n, m\}" == ripetizione del precedene match almeno n e max m volte;
+	\item[-] "[...]" == elenco di caratteri ammissibili.
+	\end{itemize}
+
+	\noindent Esempio:
+	
+	\noindent Studenti con cognome che inizia con 'A', 'B',  'D' o 'N' e finisce con 'a':
+	\begin{code}
+	SELECT cognome, nome, citta FROM Studente
+	WHERE cognome SIMILAR TO '[ABDN]{1}%a';
+	\end{code}
+
+\end{itemize}
+\end{itemize}
+\\\\
+\textbf{ORDER BY} & ordina le tuple risultato in ordine rispetto agli attributi specificati. Si specifica come ultima clausola. La struttura è:
+\begin{code}
+	ORDER BY attributo [ASC | DESC], attributo2 [ASC | DESC], ...;
+\end{code}
+\noindent Le tuple vengono ordinate secondo il primo attributo, se vi sono valori uguali sul primo, si ordina basandosi sul secondo, e così via.
+\\\\
+\textbf{Operatori Aggregati} & permettono di determinare un valore considerando i valori ottenuti da una SELECT. Gli operatori aggregati possono ritornare un:
+\begin{itemize}
+\item[-] Conteggio:
+\begin{code}
+	 COUNT({ * | expr | ALL expr | DISTINCT expr }])
+\end{code}
+\noindent Il parametro expr è un'espressione che usa attributi e funzioni di attributi (non può usare operatori di aggregazione). Nello specifico:
+	\begin{itemize}
+	\item[-] COUNT(*) -> ritorna il numero di tuple che risultano dallla query;
+	\item[-] COUNT(expr) -> ritorna il numero di tuple che rispettano expr (il valore di expr non è null);
+	\item[-] COUNT(ALL expr) -> alias a COUNT(expr);
+	\item[-] COUNT(DISTINCT expr) -> ritorna il numero di tuple che rispettano expr eliminando i doppioni.
+	\end{itemize}
+\noindent In genere COUNT ritorna una tabella composta da una sola colonna e una sola riga.
+\item[-] Valore numerico/alfanumerico:
+\begin{code}
+	 SUM | AVG | MAX | MIN ({expr | DISTINCT expr }]) 
+\end{code}
+\end{itemize}
+
+\end{longtable}
+\noindent Il risultato della SELECT:
+\begin{itemize}
+\item[-] Ha come schema tutti gli attributi richiesti nella SELECT;
+\item[-] Ha come contenuto tutte le tuple t ottenute proiettando sugli attributi
+dopo SELECT le tuple $t_0$ appartenenti al prodotto cartesiano delle tabelle
+ottenute dopo il FROM che soddisfano l’eventuale condizione nella
+clausola WHERE / HAVING / GROUP BY.
+\end{itemize}
+
+\paragraph*{Funzioni usabili in expression} Il campo expression della SELECT permette anche di applicare delle funzioni alle colonne richieste. Alcune di queste sono:
+\begin{itemize}
+\item[-] UPPER(attributo) -> ritorna il contenuto tutto in maiuscolo;
+\item[-] LOWER(attributo) -> ritorna il contenuto tutto in minuscolo;
+\item[-] CHAR\_LENGHT(attributo) -> ritorna la lunghezza in caratteri dell'attributo;
+\item[-] CURRENT\_DATE -> ritorna la data corrente in formato DATE;
+\end{itemize}
+
+\paragraph*{Conversioni nelle query} SQL permette di effettuare cast nei valori ritornati da una query. Il comando SQL per effettuarlo è:
+\begin{code}
+	CAST (expr AS newType)
+\end{code}
+\noindent PostgreSQl permette di abbreviarlo come segue:
+\begin{code}
+	expr::nuovoTipo
+\end{code}
+
+\noindent Esempio:
+
+\noindent Calcola la media delle medie distinte degli studenti.
+
+\begin{code}
+	SELECT AVG(DISTINCT media)::DECIMAL(5,2) 
+	FROM Studente;
+\end{code}
+
+\end{document}
